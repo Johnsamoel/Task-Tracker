@@ -10,10 +10,10 @@ const IsAuthenticated = async (req, res, next) => {
       req.userId = user.id;
       next();
     } else {
-      res.json({ message: "Something went worng" });
+      res.tatus(400).json({ message: "Something went worng" });
     }
   } catch (error) {
-    res.json({ message: "You have To Login First" });
+    res.status(401).json({ message: "You have To Login First" });
   }
 };
 

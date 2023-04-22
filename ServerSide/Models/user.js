@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 
 const UserSchema = mongoose.Schema({
     name: {
-        type:String,
-        required:true
+        type: String,
+        required: true
     },
-    age : {
+    age: {
         type: Number,
         min: 18,
         max: 90,
@@ -20,20 +20,25 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    tasks : {
+    tasks: {
         type: [mongoose.Schema.Types.ObjectId],
         required: true,
         ref: 'Task'
     },
-    avatar : {
+    avatar: {
         type: String,
         required: false
     },
-    friends : {
+    role: {
+        type: String,
+        required: true,
+        enum: ["Admin", "User"]
+    },
+    friends: {
         type: [mongoose.Schema.Types.ObjectId],
         required: false,
         ref: 'User'
     }
-}, {collection: 'Users'})
+}, { collection: 'Users' })
 
-module.exports = mongoose.model('User' , UserSchema)
+module.exports = mongoose.model('User', UserSchema)

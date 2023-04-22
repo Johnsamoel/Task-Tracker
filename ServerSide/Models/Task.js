@@ -17,6 +17,11 @@ const TaskSchema = mongoose.Schema({
         type: [mongoose.Schema.Types.ObjectId],
         required: true,
         ref: 'User'
+    },
+    status:{
+        type:String,
+        required:true,
+        enum:[ "Not Started","Inprogress", "Completed"]
     }
 } , {collection : 'Tasks'})
 
