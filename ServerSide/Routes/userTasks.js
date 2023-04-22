@@ -13,6 +13,6 @@ router.get( '/GetTask' , GetUserTaskById)
 router.delete( '/deleteTask' , DeleteTask)
 
 router.put( '/editTask' , updateTask)
-router.get('/userTasks',getUserTasks)
+router.get('/userTasks?:pageNumber',getUserTasks)
 
 module.exports = router;

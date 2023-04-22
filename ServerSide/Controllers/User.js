@@ -76,12 +76,15 @@ const updateUser = async (req, res) => {
   }
 };
 const getUserTasks = async (req, res) => {
+  const pageNumber=parseInt(req.query.pageNumber)
+    const limit=10
+    const skipDocumentsNumber= (pageNumber-1)*limit
   try {
     const userId = req.body.userId
     if (!userId) {
       res.status(400).json("User is not found")
     }
-    const userTasks = await User.findById(userId).populate('tasks').exec()
+    const userTasks = await User.findById(userId).populate('tasks').limit(limit).skip(skipDocumentsNumber).exec()
     if(userTasks){
       res.status(200).json(userTasks.tasks)
     }else{

@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const bycrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { HASHING_SALTROUND,JWT_SECRET } = require("../configuration");
