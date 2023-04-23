@@ -21,7 +21,7 @@ const TaskSchema = mongoose.Schema({
     status:{
         type:String,
         required:true,
-        enum:[ "Not Started","Inprogress", "Completed"]
+        enum:[ "Not Started","Inprogress", "Completed" , "Cancelled"]
     }
 } , {collection : 'Tasks'})
 

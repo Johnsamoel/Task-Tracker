@@ -1,20 +1,19 @@
-
-// User Model
+// User & Task Model
 const User = require("../Models/user");
 const Task = require("../Models/Task");
 
-// Get All users
-
+// validator results
+const { validationResult } = require("express-validator");
 
 // Get users by id
 const GetUserById = async (req, res) => {
   try {
-    if (!req.body.userId) {
+    if (!req.params.userId) {
       res.status(400).json({ message: "You have to add user id" })
       return;
     }
     // Getting user by id.
-    const userData = await User.findById(req.body.userId).exec()
+    const userData = await User.findById(req.params.userId).exec()
 
     //validating the result.
     if (userData) {
@@ -31,34 +30,35 @@ const GetUserById = async (req, res) => {
 const DeleteUser = async (req, res) => {
 
   try {
-    if (!req.body.userId) {
+    if (!req.params.userId) {
       res.status(404).json({ message: "You have to add user id" })
       return;
     }
     // Delete user by id.
-    const result = await User.findByIdAndDelete(req.body.userId).exec()
+    const result = await User.findByIdAndDelete(req.params.userId).exec()
     // checking deletion result.
     if (result) {
-      const result =await Task.find({ userId: { $eq:req.body.userId  } }).updateMany({$pull: { userId: req.body.userId }}).exec()
+      const result =await Task.find({ userId: { $eq:req.params.userId  } }).updateMany({$pull: { userId: req.params.userId }}).exec()
       res.status(200).json({ message: "user was deleted successfully" });
     } else {
       res.status(400).json({ message: "Something went wrong" });
     }
   } catch (error) {
-    console.log(error)
     res.status(400).json({ message: "something went wrong , Try again" });
   }
 };
 
 // update user
 const updateUser = async (req, res) => {
+  const ValidationValues = validationResult(req);
   try {
-    if (!req.body.userData) {
-      res.status(404).json({ message: "You have to add user Object" })
-      return;
+    
+    if (!ValidationValues.isEmpty()) {
+      return res.status(422).json({ message: ValidationValues.array()[0].msg });
     }
+
     // find user and update data.
-    const user = await User.findByIdAndUpdate(req.body.userData.id).exec()
+    const user = await User.findByIdAndUpdate(req.params.userId).exec()
     // validating user and setting values to user object
     if (user) {
       for (const key in req.body.userData) {
@@ -84,7 +84,7 @@ const getUserTasks = async (req, res) => {
     const limit=10
     const skipDocumentsNumber= (pageNumber-1)*limit
   try {
-    const userId = req.body.userId
+    const userId = req.params.userId
     if (!userId) {
       res.status(400).json("User is not found")
     }
@@ -96,7 +96,6 @@ const getUserTasks = async (req, res) => {
     }
     
   } catch (error) {
-    console.log(error)
     res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
 
   }

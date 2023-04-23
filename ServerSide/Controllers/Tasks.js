@@ -1,24 +1,29 @@
 const mongoose = require("mongoose");
 
-
+// user and Task models
 const Task = require("../Models/Task");
 const User = require('../Models/user');
 
+// importing the validator
+const { validationResult } = require('express-validator')
 
 
 
 // Get Task by id
-const GetUserTaskById = async (req, res) => {
+const GetTaskById = async (req, res) => {
   try {
-    if (!req.body.TaskId) {
+
+    if (!req.params.TaskId) {
       res.status(400).json({ message: "You have to add Task id" })
       return;
     }
+
     // Getting the task by Taskid.
-    const Task = await Task.findById(req.body.TaskId)
+    const TaskResult = await Task.findById(req.params.TaskId)
+
     // validating the result based on fetching response.
-    if (Task) {
-      res.status(200).json(data);
+    if (TaskResult) {
+      res.status(200).json(TaskResult);
     } else {
       res.status(400).json({ message: "Task Not Found" });
     }
@@ -29,11 +34,13 @@ const GetUserTaskById = async (req, res) => {
 
 // Add Task
 const AddTask = async (req, res) => {
+  const validationvalues = validationResult(req);
   try {
-    if (!req.body.Task) {
-      res.status(404).json({ message: "You have to add Task Object" });
-      return;
+    // sending errors if any
+    if (!validationvalues.isEmpty()) {
+      return res.status(422).json({ message: validationvalues.array()[0].msg });
     }
+
     // creating new Task obj based on Task schema
     const Taskobj = new Task(req.body.Task);
 
@@ -61,24 +68,18 @@ const AddTask = async (req, res) => {
 // Delete Task
 const DeleteTask = async (req, res) => {
   try {
-    if (!req.body.TaskId) {
+    if (!req.params.TaskId) {
       res.status(400).json({ message: "You have to add Task ID" })
       return;
     }
+
     // Find Task by ID.
-    const TaskFindingResult = await Task.findByIdAndDelete(req.body.TaskId)
+    const TaskFindingResult = await Task.findByIdAndDelete(req.params.TaskId)
 
     // validating the result
     if (TaskFindingResult) {
 
-      const updateUserDataResult =await User.find({ tasks: { $eq:req.body.TaskId  } }).updateMany({$pull: { tasks: req.body.TaskId }}).exec()
-      console.log(updateUserDataResult,"kkk")
-
-      // const UserTaskIds = req.user.tasks;
-
-      // const NewFilteredIds = UserTaskIds.filter((id) => id.toString() !== req.body.TaskId);
-
-      // const updateUserDataResult = await User.findByIdAndUpdate({_id: req.userId} , { tasks: NewFilteredIds }).exec();
+      const updateUserDataResult =await User.find({ tasks: { $eq:req.params.TaskId  } }).updateMany({$pull: { tasks: req.params.TaskId }}).exec()
 
      if(updateUserDataResult) res.status(200).json({ message: "Item was deleted successfully" });
     } else {
@@ -91,14 +92,16 @@ const DeleteTask = async (req, res) => {
 
 //Update Task
 const updateTask = async (req, res) => {
+  const validationvalues = validationResult(req);
+
   try {
-    if (!req.body.Task) {
-      res.status(404).json({ message: "You have to add Task Object" })
-      return;
+    // sending errors if any
+    if (!validationvalues.isEmpty()) {
+      return res.status(422).json({ message: validationvalues.array()[0].msg });
     }
 
     // finding Task by id.
-    const TaskObj = await Task.findByIdAndUpdate(req.body.Task.id).exec()
+    const TaskObj = await Task.findByIdAndUpdate(req.params.TaskId).exec()
 
     if (TaskObj) {
       for (const key in req.body.Task) {
@@ -122,7 +125,7 @@ const updateTask = async (req, res) => {
 
 module.exports = {
   AddTask,
-  GetUserTaskById,
+  GetTaskById,
   DeleteTask,
   updateTask,
 };

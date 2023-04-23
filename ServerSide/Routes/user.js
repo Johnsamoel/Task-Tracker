@@ -4,12 +4,14 @@ const router = express.Router();
 
 const { DeleteUser , GetUserById ,updateUser } = require('../Controllers/User');
 
+const CheckUpdateFormValues = require('../Utils/UpdateUserCheck');
 
-router.get('/GetUser' , GetUserById);
 
-router.put('/updateUser' , updateUser);
+router.get('/GetUser/:userId' , GetUserById);
 
-router.delete('/deleteUser' , DeleteUser);
+router.put('/updateUser/:userId' , CheckUpdateFormValues()  ,updateUser);
+
+router.delete('/deleteUser/:userId' , DeleteUser);
 
 
 

@@ -4,10 +4,14 @@ const router = express.Router();
 
 const { RegisterUser , Login , Logout} = require('../Controllers/auth');
 
+const CheckRegisterFormValues = require('../Utils/UserRegisterValidation');
 
-router.post('/register' , RegisterUser);
+const CheckLoginFormValues = require('../Utils/UserLoginValidation');
 
-router.post('/login' , Login);
+
+router.post('/register' , CheckRegisterFormValues() , RegisterUser);
+
+router.post('/login' , CheckLoginFormValues() , Login);
 
 router.post('/logout' , Logout);
 
