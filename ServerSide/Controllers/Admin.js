@@ -5,7 +5,7 @@ const Task = require("../Models/Task");
 const User = require("../Models/user");
 
 // Get All users
-const GetUsers = async (req, res) => {
+const GetUsers = async (req, res, next) => {
     const pageNumber=parseInt(req.query.pageNumber)
     const limit=10
     const skipDocumentsNumber= (pageNumber-1)*limit
@@ -19,10 +19,11 @@ const GetUsers = async (req, res) => {
       res.status(400).json({ message: "something went wrong" });
     }
   } catch (error) {
-    res.status(400).json({ message: "something went wrong , Try again" });
-  }
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)  }
 };
-const GetAllTasks = async (req, res) => {
+const GetAllTasks = async (req, res, next) => {
     const pageNumber=parseInt(req.query.pageNumber)
     const limit=10
     const skipDocumentsNumber= (pageNumber-1)*limit
@@ -36,7 +37,9 @@ const GetAllTasks = async (req, res) => {
         res.status(400).json({ message: "something went wrong" });
       }
     } catch (error) {
-      res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
+      error.message="Server Is Not Responding, Please Try Again Later."
+      error.StatusCode=500
+      next(error)
     }
   };
   module.exports = {

@@ -14,7 +14,10 @@ const IsAuthenticated = async (req, res, next) => {
       res.tatus(400).json({ message: "Something went worng" });
     }
   } catch (error) {
-    res.status(401).json({ message: "You have To Login First" });
+    // res.status(401).json({ message: "You have To Login First" });
+    error.message="You have To Login First"
+    error.StatusCode=401
+    next(error)
   }
 };
 

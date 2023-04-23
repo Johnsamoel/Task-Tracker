@@ -7,7 +7,7 @@ const User = require("../Models/user");
 const { validationResult } = require("express-validator");
 
 // Register a new user
-const RegisterUser = async (req, res) => {
+const RegisterUser = async (req, res, next) => {
   const ValidationValues = validationResult(req);
 
   try {
@@ -33,12 +33,14 @@ const RegisterUser = async (req, res) => {
       res.status(400).json({ message: "something went wrong" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Server Is Not Responding, Please Try Again Later." });
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)
   }
 };
 
 // log user in
-const Login = async (req, res) => {
+const Login = async (req, res, next) => {
   const ValidationValues = validationResult(req);
   try {
     // returning errors if any.
@@ -52,8 +54,9 @@ const Login = async (req, res) => {
     return;
 
   } catch (error) {
-    res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
-  }
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)  }
 };
 
 // log user out
