@@ -12,7 +12,7 @@ const adminDahsboard= require('./Routes/Admin')
 const Authentication = require('./Routes/auth');
 
 // Tasks Routes
-const TasksRoutes = require('./Routes/userTasks');
+const TasksRoutes = require('./Routes/Tasks');
 
 // user Routes
 const UserRoutes = require('./Routes/user')
@@ -36,7 +36,14 @@ app.use(UserRoutes);
 
 app.use(NotFoundRoute);
 
+<<<<<<< HEAD
 
 app.use((error, req, res, next)=> {
     res.status(error.StatusCode).json({ message: error.message })
   });
+=======
+// connecting to the Database
+mongoose.connect(`mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.wtbncmz.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`).then(() => {
+    app.listen(3000)
+})
+>>>>>>> ff3f8e03442b218e0fd681913d28eaf984ac63c5

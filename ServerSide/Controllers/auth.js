@@ -1,35 +1,36 @@
 const bycrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { HASHING_SALTROUND,JWT_SECRET } = require("../configuration");
+const { HASHING_SALTROUND, JWT_SECRET } = require("../configuration");
 // User Model
 const User = require("../Models/user");
+// validator results
+const { validationResult } = require("express-validator");
 
 // Register a new user
 const RegisterUser = async (req, res, next) => {
-  try {
-    // validating Request payload
-    if (!req.body) {
-      res.status(400).json({ message: "You have to add User Data" });
-      return;
-    }
-    const { email,password } = req.body;
-    // check if the user already exists
-    const userData = await User.findOne({ email: email });
+  const ValidationValues = validationResult(req);
 
-    if (userData) {
-      res.status(400).json("The email Already Exists");
-      return;
+  try {
+    if (!ValidationValues.isEmpty()) {
+      return res.status(422).json({ message: ValidationValues.array()[0].msg });
     }
+
+    const { password } = req.body;
+
     // hashing pasword and create user instant
-    const hasedPassword = await bycrypt.hash(password,parseInt(HASHING_SALTROUND) );
-    const UserData = new User({ ...req.body, password: hasedPassword});
+    const hasedPassword = await bycrypt.hash(
+      password,
+      parseInt(HASHING_SALTROUND)
+    );
+    const UserData = new User({ ...req.body, password: hasedPassword });
+
     // add the new user to the db
     const AddingUserResult = await UserData.save();
 
     if (AddingUserResult) {
-      res.status(201).json({ message: "User was added successfully"});
+      res.status(201).json({ message: "User was added successfully" });
     } else {
-      res.status(400).json({ message :"something went wrong"});
+      res.status(400).json({ message: "something went wrong" });
     }
   } catch (error) {
     error.message="Server Is Not Responding, Please Try Again Later."
@@ -39,35 +40,18 @@ const RegisterUser = async (req, res, next) => {
 };
 
 // log user in
-const Login = async (req, res,next) => {
+const Login = async (req, res, next) => {
+  const ValidationValues = validationResult(req);
   try {
-    // validating Request payload
-    if (!req.body.email || !req.body.password) {
-      res.status(400).json({ message: "You have to add User Credentials" });
-      return;
+    // returning errors if any.
+    if (!ValidationValues.isEmpty()) {
+      return res.status(422).json({ message: ValidationValues.array()[0].msg });
     }
-    
-    // if(req.body.email.match)
-    const { email, password } = req.body;
-    // find user by email
-    const userObj = await User.findOne({ email: email });
 
-    if (userObj) {
-        //validate user password
-      const isValidPassword = await bycrypt.compare(password, userObj.password);
-
-      if (isValidPassword) {
-        // creating & returning token 
-        const token = jwt.sign({ id: userObj._id }, JWT_SECRET);
-        res.status(200).json({ token });
-        return;
-      } else {
-        res.status(400).json({ message :"invalid data!!"});
-        return;
-      }
-    }else {
-    res.status(404).json({ message : "invalid user data"});
-    }
+    // creating & returning token
+    const token = jwt.sign({ id: req.user._id }, JWT_SECRET);
+    res.status(200).json({ token });
+    return;
 
   } catch (error) {
     error.message="Server Is Not Responding, Please Try Again Later."
