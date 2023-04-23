@@ -12,7 +12,7 @@ const { validationResult } = require('express-validator')
 // Get Task by id
 const GetTaskById = async (req, res) => {
   try {
-    
+
     if (!req.params.TaskId) {
       res.status(400).json({ message: "You have to add Task id" })
       return;
@@ -28,7 +28,6 @@ const GetTaskById = async (req, res) => {
       res.status(400).json({ message: "Task Not Found" });
     }
   } catch (error) {
-    console.log(error)
     res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
   }
 };
@@ -120,7 +119,6 @@ const updateTask = async (req, res) => {
       res.status(404).json({ message: "item wasn't found" });
     }
   } catch (error) {
-    console.log(error)
     res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
   }
 };
