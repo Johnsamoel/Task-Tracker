@@ -70,11 +70,15 @@ const DeleteTask = async (req, res) => {
 
     // validating the result
     if (TaskFindingResult) {
-      const UserTaskIds = req.user.tasks;
 
-      const NewFilteredIds = UserTaskIds.filter((id) => id.toString() !== req.body.TaskId);
+      const updateUserDataResult =await User.find({ tasks: { $eq:req.body.TaskId  } }).updateMany({$pull: { tasks: req.body.TaskId }}).exec()
+      console.log(updateUserDataResult,"kkk")
 
-      const updateUserDataResult = await User.findByIdAndUpdate({_id: req.userId} , { tasks: NewFilteredIds }).exec();
+      // const UserTaskIds = req.user.tasks;
+
+      // const NewFilteredIds = UserTaskIds.filter((id) => id.toString() !== req.body.TaskId);
+
+      // const updateUserDataResult = await User.findByIdAndUpdate({_id: req.userId} , { tasks: NewFilteredIds }).exec();
 
      if(updateUserDataResult) res.status(200).json({ message: "Item was deleted successfully" });
     } else {
