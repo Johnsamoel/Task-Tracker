@@ -29,7 +29,9 @@ app.use('/auth',Authentication);
 
 // check if the user is Authenticated first.
 app.use(IsAuthenticated)
+
 app.use('/dashboard',adminDahsboard)
+
 app.use(TasksRoutes);
 
 app.use(UserRoutes);
