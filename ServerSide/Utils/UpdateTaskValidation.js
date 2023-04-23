@@ -1,5 +1,5 @@
 // importing validator library
-const {body} = require('express-validator');
+const {body , check} = require('express-validator');
 
 // import status values
 const {Task_Status} = require('./Consts')
@@ -9,7 +9,7 @@ const CheckUpdateTaskFormValues = () => {
 
     return [
         // id checking
-        body('Task.id' , "invalid Task id value").trim().isMongoId(),
+        check('TaskId' , "invalid Task id value").trim().isMongoId(),
         
         // checking title value
         body('Task.title' , 'Invalid Title value').trim().isLength({min:4 , max:50}),

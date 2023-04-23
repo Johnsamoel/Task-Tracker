@@ -1,5 +1,5 @@
 // importing validator library
-const {body} = require('express-validator');
+const {body, check} = require('express-validator');
 
 // importing User model.
 const User = require('../Models/user');
@@ -8,7 +8,7 @@ const CheckUpdateFormValues = () => {
 
     return [
         // checking id value
-        body('userData.id' , "invalid User id").trim().isMongoId(),
+        check('userId' , "invalid User id").trim().isMongoId(),
 
         // checking name value
         body('userData.name' , 'Invalid Name').isAlpha().trim().isLength({min:4 , max:12}),

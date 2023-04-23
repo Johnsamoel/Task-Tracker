@@ -7,11 +7,11 @@ const { DeleteUser , GetUserById ,updateUser } = require('../Controllers/User');
 const CheckUpdateFormValues = require('../Utils/UpdateUserCheck');
 
 
-router.get('/GetUser' , GetUserById);
+router.get('/GetUser/:userId' , GetUserById);
 
-router.put('/updateUser' , CheckUpdateFormValues()  ,updateUser);
+router.put('/updateUser/:userId' , CheckUpdateFormValues()  ,updateUser);
 
-router.delete('/deleteUser' , DeleteUser);
+router.delete('/deleteUser/:userId' , DeleteUser);
 
 
 

@@ -10,21 +10,25 @@ const { validationResult } = require('express-validator')
 
 
 // Get Task by id
-const GetUserTaskById = async (req, res) => {
+const GetTaskById = async (req, res) => {
   try {
-    if (!req.body.TaskId) {
+    
+    if (!req.params.TaskId) {
       res.status(400).json({ message: "You have to add Task id" })
       return;
     }
+
     // Getting the task by Taskid.
-    const Task = await Task.findById(req.body.TaskId)
+    const TaskResult = await Task.findById(req.params.TaskId)
+
     // validating the result based on fetching response.
-    if (Task) {
-      res.status(200).json(data);
+    if (TaskResult) {
+      res.status(200).json(TaskResult);
     } else {
       res.status(400).json({ message: "Task Not Found" });
     }
   } catch (error) {
+    console.log(error)
     res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
   }
 };
@@ -65,18 +69,18 @@ const AddTask = async (req, res) => {
 // Delete Task
 const DeleteTask = async (req, res) => {
   try {
-    if (!req.body.TaskId) {
+    if (!req.params.TaskId) {
       res.status(400).json({ message: "You have to add Task ID" })
       return;
     }
 
     // Find Task by ID.
-    const TaskFindingResult = await Task.findByIdAndDelete(req.body.TaskId)
+    const TaskFindingResult = await Task.findByIdAndDelete(req.params.TaskId)
 
     // validating the result
     if (TaskFindingResult) {
 
-      const updateUserDataResult =await User.find({ tasks: { $eq:req.body.TaskId  } }).updateMany({$pull: { tasks: req.body.TaskId }}).exec()
+      const updateUserDataResult =await User.find({ tasks: { $eq:req.params.TaskId  } }).updateMany({$pull: { tasks: req.params.TaskId }}).exec()
 
      if(updateUserDataResult) res.status(200).json({ message: "Item was deleted successfully" });
     } else {
@@ -98,7 +102,7 @@ const updateTask = async (req, res) => {
     }
 
     // finding Task by id.
-    const TaskObj = await Task.findByIdAndUpdate(req.body.Task.id).exec()
+    const TaskObj = await Task.findByIdAndUpdate(req.params.TaskId).exec()
 
     if (TaskObj) {
       for (const key in req.body.Task) {
@@ -123,7 +127,7 @@ const updateTask = async (req, res) => {
 
 module.exports = {
   AddTask,
-  GetUserTaskById,
+  GetTaskById,
   DeleteTask,
   updateTask,
 };
