@@ -8,6 +8,7 @@ const IsAuthenticated = async (req, res, next) => {
     const user = await UserModel.findById({ _id: result.id });
     if (user) {
       req.userId = user.id;
+      req.user = user
       next();
     } else {
       res.tatus(400).json({ message: "Something went worng" });

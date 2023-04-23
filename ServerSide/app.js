@@ -5,8 +5,10 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors')
 const {IsAuthenticated} = require('./middleware/IsAuthenticated');
+
 //admin routes
 const adminDahsboard= require('./Routes/Admin')
+
 // authentication Routes
 const Authentication = require('./Routes/auth');
 
@@ -20,11 +22,14 @@ const UserRoutes = require('./Routes/user')
 const NotFoundRoute = require('./Routes/NotFoud');
 
 app.use(cors())
+
 app.use(express.json());
 
 app.use('/auth',Authentication);
+
 app.use('/dashboard',adminDahsboard)
-// check if the user is Authenticated first
+
+// check if the user is Authenticated first.
 app.use(IsAuthenticated)
 
 app.use(TasksRoutes);
@@ -37,9 +42,10 @@ app.use(NotFoundRoute);
 mongoose.connect(`mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.wtbncmz.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`).then(() => {
     app.listen(3000)
 })
-app.use(function (error, req, res, next) {
-    if (req.statusCode <= 500) {
-      res.json({ message: error.message });
-    }
-    res.status(500).send("Internal server error");
-  });
+
+// app.use(function (error, req, res, next) {
+//     if (req.statusCode <= 500) {
+//       res.json({ message: error.message });
+//     }
+//     res.status(500).send("Internal server error");
+//   });

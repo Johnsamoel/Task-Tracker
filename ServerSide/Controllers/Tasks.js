@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 
 const Task = require("../Models/Task");
+const User = require('../Models/user');
 
 
 
@@ -41,8 +42,14 @@ const AddTask = async (req, res) => {
 
     // adding the Task to The Database.
     const result = await Taskobj.save();
+
     if (result) {
-      res.status(201).json({ message: "Item was added successfully" });
+
+      // updating task ids per user in db by fetching the user and the last task id.
+      const resultOfUpdatingUser = await User.findByIdAndUpdate({_id: req.userId} , { tasks: [...req.user.tasks , result._id ] }).exec()
+
+     if(resultOfUpdatingUser)  res.status(201).json({ message: "Item was added successfully" });
+
     } else {
       res.status(404).json({ message: "something went wrong" });
     }
@@ -59,10 +66,17 @@ const DeleteTask = async (req, res) => {
       return;
     }
     // Find Task by ID.
-    const Task = await Task.findByIdAndDelete(req.body.TaskId);
+    const TaskFindingResult = await Task.findByIdAndDelete(req.body.TaskId)
+
     // validating the result
-    if (Task) {
-      res.status(200).json({ message: "Item was deleted successfully" });
+    if (TaskFindingResult) {
+      const UserTaskIds = req.user.tasks;
+
+      const NewFilteredIds = UserTaskIds.filter((id) => id.toString() !== req.body.TaskId);
+
+      const updateUserDataResult = await User.findByIdAndUpdate({_id: req.userId} , { tasks: NewFilteredIds }).exec();
+
+     if(updateUserDataResult) res.status(200).json({ message: "Item was deleted successfully" });
     } else {
       res.status(400).json({ message: "Something went wrong" });
     }

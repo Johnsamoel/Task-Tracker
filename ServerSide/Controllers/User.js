@@ -1,6 +1,7 @@
 
 // User Model
 const User = require("../Models/user");
+const Task = require("../Models/Task");
 
 // Get All users
 
