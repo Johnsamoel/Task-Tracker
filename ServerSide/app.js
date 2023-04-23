@@ -13,7 +13,7 @@ const adminDahsboard= require('./Routes/Admin')
 const Authentication = require('./Routes/auth');
 
 // Tasks Routes
-const TasksRoutes = require('./Routes/userTasks');
+const TasksRoutes = require('./Routes/Tasks');
 
 // user Routes
 const UserRoutes = require('./Routes/user')
@@ -42,10 +42,3 @@ app.use(NotFoundRoute);
 mongoose.connect(`mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.wtbncmz.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`).then(() => {
     app.listen(3000)
 })
-
-// app.use(function (error, req, res, next) {
-//     if (req.statusCode <= 500) {
-//       res.json({ message: error.message });
-//     }
-//     res.status(500).send("Internal server error");
-//   });

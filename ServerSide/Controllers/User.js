@@ -1,10 +1,9 @@
-
-// User Model
+// User & Task Model
 const User = require("../Models/user");
 const Task = require("../Models/Task");
 
-// Get All users
-
+// validator results
+const { validationResult } = require("express-validator");
 
 // Get users by id
 const GetUserById = async (req, res) => {
@@ -45,18 +44,19 @@ const DeleteUser = async (req, res) => {
       res.status(400).json({ message: "Something went wrong" });
     }
   } catch (error) {
-    console.log(error)
     res.status(400).json({ message: "something went wrong , Try again" });
   }
 };
 
 // update user
 const updateUser = async (req, res) => {
+  const ValidationValues = validationResult(req);
   try {
-    if (!req.body.userData) {
-      res.status(404).json({ message: "You have to add user Object" })
-      return;
+    
+    if (!ValidationValues.isEmpty()) {
+      return res.status(422).json({ message: ValidationValues.array()[0].msg });
     }
+
     // find user and update data.
     const user = await User.findByIdAndUpdate(req.body.userData.id).exec()
     // validating user and setting values to user object
@@ -96,7 +96,6 @@ const getUserTasks = async (req, res) => {
     }
     
   } catch (error) {
-    console.log(error)
     res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
 
   }

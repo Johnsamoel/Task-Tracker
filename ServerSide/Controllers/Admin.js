@@ -36,7 +36,6 @@ const GetAllTasks = async (req, res) => {
         res.status(400).json({ message: "something went wrong" });
       }
     } catch (error) {
-        console.log(error)
       res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
     }
   };

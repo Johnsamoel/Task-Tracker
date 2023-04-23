@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
 
-
+// user and Task models
 const Task = require("../Models/Task");
 const User = require('../Models/user');
 
+// importing the validator
+const { validationResult } = require('express-validator')
 
 
 
@@ -29,11 +31,13 @@ const GetUserTaskById = async (req, res) => {
 
 // Add Task
 const AddTask = async (req, res) => {
+  const validationvalues = validationResult(req);
   try {
-    if (!req.body.Task) {
-      res.status(404).json({ message: "You have to add Task Object" });
-      return;
+    // sending errors if any
+    if (!validationvalues.isEmpty()) {
+      return res.status(422).json({ message: validationvalues.array()[0].msg });
     }
+
     // creating new Task obj based on Task schema
     const Taskobj = new Task(req.body.Task);
 
@@ -65,6 +69,7 @@ const DeleteTask = async (req, res) => {
       res.status(400).json({ message: "You have to add Task ID" })
       return;
     }
+
     // Find Task by ID.
     const TaskFindingResult = await Task.findByIdAndDelete(req.body.TaskId)
 
@@ -72,13 +77,6 @@ const DeleteTask = async (req, res) => {
     if (TaskFindingResult) {
 
       const updateUserDataResult =await User.find({ tasks: { $eq:req.body.TaskId  } }).updateMany({$pull: { tasks: req.body.TaskId }}).exec()
-      console.log(updateUserDataResult,"kkk")
-
-      // const UserTaskIds = req.user.tasks;
-
-      // const NewFilteredIds = UserTaskIds.filter((id) => id.toString() !== req.body.TaskId);
-
-      // const updateUserDataResult = await User.findByIdAndUpdate({_id: req.userId} , { tasks: NewFilteredIds }).exec();
 
      if(updateUserDataResult) res.status(200).json({ message: "Item was deleted successfully" });
     } else {
@@ -91,10 +89,12 @@ const DeleteTask = async (req, res) => {
 
 //Update Task
 const updateTask = async (req, res) => {
+  const validationvalues = validationResult(req);
+
   try {
-    if (!req.body.Task) {
-      res.status(404).json({ message: "You have to add Task Object" })
-      return;
+    // sending errors if any
+    if (!validationvalues.isEmpty()) {
+      return res.status(422).json({ message: validationvalues.array()[0].msg });
     }
 
     // finding Task by id.
@@ -116,6 +116,7 @@ const updateTask = async (req, res) => {
       res.status(404).json({ message: "item wasn't found" });
     }
   } catch (error) {
+    console.log(error)
     res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
   }
 };
