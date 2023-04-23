@@ -1,8 +1,7 @@
 const express = require('express');
-const { DB_NAME,DB_PASSWORD,DB_USERNAME } = require("./configuration");
+const app = require("./connections");
+
 require('dotenv').config()
-const app = express();
-const mongoose = require('mongoose');
 const cors = require('cors')
 const {IsAuthenticated} = require('./middleware/IsAuthenticated');
 
@@ -27,25 +26,17 @@ app.use(express.json());
 
 app.use('/auth',Authentication);
 
-app.use('/dashboard',adminDahsboard)
 
 // check if the user is Authenticated first.
 app.use(IsAuthenticated)
-
+app.use('/dashboard',adminDahsboard)
 app.use(TasksRoutes);
 
 app.use(UserRoutes);
 
 app.use(NotFoundRoute);
 
-// connecting to the Database
-mongoose.connect(`mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.wtbncmz.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`).then(() => {
-    app.listen(3000)
-})
 
-// app.use(function (error, req, res, next) {
-//     if (req.statusCode <= 500) {
-//       res.json({ message: error.message });
-//     }
-//     res.status(500).send("Internal server error");
-//   });
+app.use((error, req, res, next)=> {
+    res.status(error.StatusCode).json({ message: error.message })
+  });

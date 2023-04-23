@@ -8,7 +8,7 @@ const User = require('../Models/user');
 
 
 // Get Task by id
-const GetUserTaskById = async (req, res) => {
+const GetUserTaskById = async (req, res, next) => {
   try {
     if (!req.body.TaskId) {
       res.status(400).json({ message: "You have to add Task id" })
@@ -23,12 +23,14 @@ const GetUserTaskById = async (req, res) => {
       res.status(400).json({ message: "Task Not Found" });
     }
   } catch (error) {
-    res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)
   }
 };
 
 // Add Task
-const AddTask = async (req, res) => {
+const AddTask = async (req, res, next) => {
   try {
     if (!req.body.Task) {
       res.status(404).json({ message: "You have to add Task Object" });
@@ -54,12 +56,14 @@ const AddTask = async (req, res) => {
       res.status(404).json({ message: "something went wrong" });
     }
   } catch (error) {
-    res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)
   }
 };
 
 // Delete Task
-const DeleteTask = async (req, res) => {
+const DeleteTask = async (req, res,next) => {
   try {
     if (!req.body.TaskId) {
       res.status(400).json({ message: "You have to add Task ID" })
@@ -85,12 +89,14 @@ const DeleteTask = async (req, res) => {
       res.status(400).json({ message: "Something went wrong" });
     }
   } catch (error) {
-    res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)
   }
 };
 
 //Update Task
-const updateTask = async (req, res) => {
+const updateTask = async (req, res, next) => {
   try {
     if (!req.body.Task) {
       res.status(404).json({ message: "You have to add Task Object" })
@@ -116,7 +122,9 @@ const updateTask = async (req, res) => {
       res.status(404).json({ message: "item wasn't found" });
     }
   } catch (error) {
-    res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)
   }
 };
 

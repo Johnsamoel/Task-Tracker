@@ -5,7 +5,7 @@ const { HASHING_SALTROUND,JWT_SECRET } = require("../configuration");
 const User = require("../Models/user");
 
 // Register a new user
-const RegisterUser = async (req, res) => {
+const RegisterUser = async (req, res, next) => {
   try {
     // validating Request payload
     if (!req.body) {
@@ -32,13 +32,14 @@ const RegisterUser = async (req, res) => {
       res.status(400).json({ message :"something went wrong"});
     }
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ message: "Server Is Not Responding, Please Try Again Later." });
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)
   }
 };
 
 // log user in
-const Login = async (req, res) => {
+const Login = async (req, res,next) => {
   try {
     // validating Request payload
     if (!req.body.email || !req.body.password) {
@@ -69,8 +70,9 @@ const Login = async (req, res) => {
     }
 
   } catch (error) {
-    res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
-  }
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)  }
 };
 
 // log user out

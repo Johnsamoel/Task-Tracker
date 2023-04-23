@@ -7,7 +7,7 @@ const Task = require("../Models/Task");
 
 
 // Get users by id
-const GetUserById = async (req, res) => {
+const GetUserById = async (req, res, next) => {
   try {
     if (!req.body.userId) {
       res.status(400).json({ message: "You have to add user id" })
@@ -23,12 +23,14 @@ const GetUserById = async (req, res) => {
       res.status(404).send({ message: "User was Not Found" });
     }
   } catch (error) {
-    res.status(400).json({ message: "something went wrong , Try again" });
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)
   }
 };
 
 // Delete user
-const DeleteUser = async (req, res) => {
+const DeleteUser = async (req, res, next) => {
 
   try {
     if (!req.body.userId) {
@@ -45,13 +47,14 @@ const DeleteUser = async (req, res) => {
       res.status(400).json({ message: "Something went wrong" });
     }
   } catch (error) {
-    console.log(error)
-    res.status(400).json({ message: "something went wrong , Try again" });
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)
   }
 };
 
 // update user
-const updateUser = async (req, res) => {
+const updateUser = async (req, resوnext) => {
   try {
     if (!req.body.userData) {
       res.status(404).json({ message: "You have to add user Object" })
@@ -76,10 +79,12 @@ const updateUser = async (req, res) => {
       res.status(404).json({ message: "item wasn't found" });
     }
   } catch (error) {
-    res.status(404).json({ message: 'server Not Responding, Please Try Again' })
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)
   }
 };
-const getUserTasks = async (req, res) => {
+const getUserTasks = async (req, res, next) => {
   const pageNumber=parseInt(req.query.pageNumber)
     const limit=10
     const skipDocumentsNumber= (pageNumber-1)*limit
@@ -96,8 +101,9 @@ const getUserTasks = async (req, res) => {
     }
     
   } catch (error) {
-    console.log(error)
-    res.status(400).json({ message: "Server Is Not Responding, Please Try Again Later." });
+    error.message="Server Is Not Responding, Please Try Again Later."
+    error.StatusCode=500
+    next(error)
 
   }
 }
