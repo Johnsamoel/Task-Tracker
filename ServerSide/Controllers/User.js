@@ -29,6 +29,7 @@ const GetUserById = async (req, res) => {
 
 // Delete user
 const DeleteUser = async (req, res) => {
+
   try {
     if (!req.body.userId) {
       res.status(404).json({ message: "You have to add user id" })
@@ -38,11 +39,13 @@ const DeleteUser = async (req, res) => {
     const result = await User.findByIdAndDelete(req.body.userId).exec()
     // checking deletion result.
     if (result) {
+      const result =await Task.find({ userId: { $eq:req.body.userId  } }).updateMany({$pull: { userId: req.body.userId }}).exec()
       res.status(200).json({ message: "user was deleted successfully" });
     } else {
       res.status(400).json({ message: "Something went wrong" });
     }
   } catch (error) {
+    console.log(error)
     res.status(400).json({ message: "something went wrong , Try again" });
   }
 };
