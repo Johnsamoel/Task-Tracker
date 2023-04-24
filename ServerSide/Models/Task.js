@@ -3,11 +3,26 @@ const mongoose = require('mongoose');
 const TaskSchema = mongoose.Schema({
     title : {
         type: String,
-        required: [true , "title is required"]
+        required: [true , "title is required"],
+        minlength : [5 , "minimun title length is 5 characters"],
+        maxlength : [50 , "maxmun title length is 50 characters"],
+        validate: {
+            validator: function(v) {
+              return !isFinite(v)
+            },
+            message: 'Invalid title'
+        }  
     },
     description: {
         type: String,
-        required: [true , "description is required"]
+        required: [true , "description is required"],
+        maxlength: [400 , "maximun name length is 400 characters"] ,
+        validate: {
+            validator: function(v) {
+              return !isFinite(v)
+            },
+            message: 'Invalid description'
+        }  
     },
     image : {
         type: String,

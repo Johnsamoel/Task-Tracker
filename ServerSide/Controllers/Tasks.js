@@ -28,7 +28,7 @@ const GetTaskById = async (req, res, next) => {
       res.status(400).json({ message: "Task Not Found" });
     }
   } catch (error) {
-    error.message="Server Is Not Responding, Please Try Again Later."
+    error.message=error.message
     error.StatusCode=500
     next(error)
   }
@@ -63,7 +63,7 @@ const AddTask = async (req, res, next) => {
       res.status(404).json({ message: "something went wrong" });
     }
   } catch (error) {
-    error.message="Server Is Not Responding, Please Try Again Later."
+    error.message=error.message
     error.StatusCode=500
     next(error)
   }
@@ -90,7 +90,7 @@ const DeleteTask = async (req, res,next) => {
       res.status(400).json({ message: "Something went wrong" });
     }
   } catch (error) {
-    error.message="Server Is Not Responding, Please Try Again Later."
+    error.message=error.message
     error.StatusCode=500
     next(error)
   }
@@ -105,6 +105,13 @@ const updateTask = async (req, res, next) => {
       return res.status(400).json({message: 'Bad Request'})
     }
 
+    const validationvalues = validationResult(req);
+
+    // sending errors if any
+    if (!validationvalues.isEmpty()) {
+      return res.status(422).json({ message: validationvalues.array()[0].msg });
+    }
+
     // finding Task by id.
     const TaskObj = await Task.findByIdAndUpdate(req.params.TaskId).exec()
 
@@ -113,13 +120,6 @@ const updateTask = async (req, res, next) => {
         if (req.body.Task[key]) TaskObj[key] = req.body.Task[key]; // setting the values dynamically
       }
       
-      req.body.Task = TaskObj;
-      const validationvalues = validationResult(req.body);
-
-    // sending errors if any
-    if (!validationvalues.isEmpty()) {
-      return res.status(422).json({ message: validationvalues.array()[0].msg });
-    }
 
       // saving update into db.
       const UpdatingResult = await TaskObj.save();
@@ -130,11 +130,11 @@ const updateTask = async (req, res, next) => {
         res.status(400).json({ message: "something went wrong" });
       }
 
-    } else {
-      res.status(404).json({ message: "item wasn't found" });
-    }
+      } else {
+        res.status(404).json({ message: "item wasn't found" });
+      }
   } catch (error) {
-    error.message="Server Is Not Responding, Please Try Again Later."
+    error.message= error.message
     error.StatusCode=500
     next(error)
   }

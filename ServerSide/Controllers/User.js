@@ -25,7 +25,7 @@ const GetUserById = async (req, res, next) => {
       res.status(404).send({ message: "User was Not Found" });
     }
   } catch (error) {
-    error.message="Server Is Not Responding, Please Try Again Later."
+    error.message=error.message
     error.StatusCode=500
     next(error)
   }
@@ -49,18 +49,25 @@ const DeleteUser = async (req, res, next) => {
       res.status(400).json({ message: "Something went wrong" });
     }
   } catch (error) {
-    error.message="Server Is Not Responding, Please Try Again Later."
+    error.message=error.message
     error.StatusCode=500
     next(error)
   }
 };
 
 // update user
-const updateUser = async (req, res,next) => {
+const updateUser = async (req, res, next) => {
   try {
 
     if(Object.values(req.body.userData).every((item) => item === "" )){
       return res.status(400).json({message: 'Bad Request'})
+    }
+    
+    const validationvalues = validationResult(req);
+
+    // sending errors if any
+    if (!validationvalues.isEmpty()) {
+      return res.status(422).json({ message: validationvalues.array()[0].msg });
     }
 
     // find user and update data.
@@ -72,16 +79,7 @@ const updateUser = async (req, res,next) => {
       for (const key in req.body.userData) {
         if (req.body.userData[key] ) userObj[key] = req.body.userData[key]; // setting the values dynamically
         if(key === "password") continue;
-      }
-
-      req.body.userData = userObj;
-
-      const ValidationValues = validationResult(req.body);
-
-      
-      if (!ValidationValues.isEmpty()) {
-        return res.status(422).json({ message: ValidationValues.array()[0].msg });
-      }
+      }    
 
       const updateResult = await userObj.save();
       
@@ -95,11 +93,12 @@ const updateUser = async (req, res,next) => {
     }
 
   } catch (error) {
-    error.message="Server Is Not Responding, Please Try Again Later."
+    error.message = error.message
     error.StatusCode=500
     next(error)
   }
 };
+
 const getUserTasks = async (req, res, next) => {
   const pageNumber=parseInt(req.query.pageNumber)
     const limit=10
@@ -117,7 +116,7 @@ const getUserTasks = async (req, res, next) => {
     }
     
   } catch (error) {
-    error.message="Server Is Not Responding, Please Try Again Later."
+    error.message=error.message
     error.StatusCode=500
     next(error)
 
