@@ -76,7 +76,7 @@ const updateUser = async (req, res, next) => {
     // validating user and setting values to user object
     if (userObj) {
 
-      for (const key in req.body.userData) {
+      for (let key in req.body.userData) {
         if (req.body.userData[key] ) userObj[key] = req.body.userData[key]; // setting the values dynamically
         if(key === "password") continue;
       }    
