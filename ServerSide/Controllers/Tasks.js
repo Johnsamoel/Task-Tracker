@@ -57,7 +57,7 @@ const AddTask = async (req, res, next) => {
       // updating task ids per user in db by fetching the user and the last task id.
       const resultOfUpdatingUser = await User.findByIdAndUpdate({_id: req.userId} , { tasks: [...req.user.tasks , result._id ] }).exec()
 
-     if(resultOfUpdatingUser)  res.status(201).json({ message: "Item was added successfully" });
+     if(resultOfUpdatingUser)  res.status(201).json({ message: "Item was added successfully" , Item: result });
 
     } else {
       res.status(404).json({ message: "something went wrong" });
@@ -98,21 +98,29 @@ const DeleteTask = async (req, res,next) => {
 
 //Update Task
 const updateTask = async (req, res, next) => {
-  const validationvalues = validationResult(req);
 
   try {
-    // sending errors if any
-    if (!validationvalues.isEmpty()) {
-      return res.status(422).json({ message: validationvalues.array()[0].msg });
+
+    if(Object.values(req.body.Task).every((item) => item === "" )){
+      return res.status(400).json({message: 'Bad Request'})
     }
 
     // finding Task by id.
     const TaskObj = await Task.findByIdAndUpdate(req.params.TaskId).exec()
 
     if (TaskObj) {
-      for (const key in req.body.Task) {
+      for (let key in req.body.Task) {
         if (req.body.Task[key]) TaskObj[key] = req.body.Task[key]; // setting the values dynamically
       }
+      
+      req.body.Task = TaskObj;
+      const validationvalues = validationResult(req.body);
+
+    // sending errors if any
+    if (!validationvalues.isEmpty()) {
+      return res.status(422).json({ message: validationvalues.array()[0].msg });
+    }
+
       // saving update into db.
       const UpdatingResult = await TaskObj.save();
 
@@ -121,6 +129,7 @@ const updateTask = async (req, res, next) => {
       } else {
         res.status(400).json({ message: "something went wrong" });
       }
+
     } else {
       res.status(404).json({ message: "item wasn't found" });
     }

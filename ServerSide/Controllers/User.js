@@ -2,6 +2,9 @@
 const User = require("../Models/user");
 const Task = require("../Models/Task");
 
+// importing bycrypt 
+const bycrypt = require('bcryptjs');
+
 // validator results
 const { validationResult } = require("express-validator");
 
@@ -54,31 +57,43 @@ const DeleteUser = async (req, res, next) => {
 
 // update user
 const updateUser = async (req, res,next) => {
-  const ValidationValues = validationResult(req);
   try {
-    
-    if (!ValidationValues.isEmpty()) {
-      return res.status(422).json({ message: ValidationValues.array()[0].msg });
+
+    if(Object.values(req.body.userData).every((item) => item === "" )){
+      return res.status(400).json({message: 'Bad Request'})
     }
 
     // find user and update data.
-    const user = await User.findByIdAndUpdate(req.params.userId).exec()
+    const userObj = await User.findByIdAndUpdate(req.params.userId).exec()
+
     // validating user and setting values to user object
-    if (user) {
+    if (userObj) {
+
       for (const key in req.body.userData) {
-        if (req.body.userData[key]) user[key] = req.body.userData[key]; // setting the values dynamically
+        if (req.body.userData[key] ) userObj[key] = req.body.userData[key]; // setting the values dynamically
+        if(key === "password") continue;
       }
 
-      const updateResult = await user.save();
+      req.body.userData = userObj;
 
+      const ValidationValues = validationResult(req.body);
+
+      
+      if (!ValidationValues.isEmpty()) {
+        return res.status(422).json({ message: ValidationValues.array()[0].msg });
+      }
+
+      const updateResult = await userObj.save();
+      
       if (updateResult) {
         res.status(200).json({ message: "item was updated successfully" });
       } else {
         res.status(404).json({ message: "something went wrong" });
       }
     } else {
-      res.status(404).json({ message: "item wasn't found" });
+        res.status(404).json({ message: "item wasn't found" });
     }
+
   } catch (error) {
     error.message="Server Is Not Responding, Please Try Again Later."
     error.StatusCode=500

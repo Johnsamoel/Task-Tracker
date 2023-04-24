@@ -18,7 +18,7 @@ router.get( '/GetTask/:TaskId' , GetTaskById)
 
 router.delete( '/deleteTask/:TaskId' , DeleteTask)
 
-router.put( '/editTask/:TaskId' , CheckUpdateTaskFormValues() ,updateTask)
+router.patch( '/editTask/:TaskId' , CheckUpdateTaskFormValues() ,updateTask)
 
 router.get('/userTasks?:pageNumber',getUserTasks)
 

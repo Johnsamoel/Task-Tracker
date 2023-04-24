@@ -15,7 +15,7 @@ const CheckUpdateTaskFormValues = () => {
         body('Task.title' , 'Invalid Title value').trim().isLength({min:4 , max:50}).notEmpty().withMessage('Title is Required'),
 
         // checking description value
-        body('Task.description' , 'Invalid description').trim().isLength({min:6 , max:400}).notEmpty().withMessage('Description is Required'),
+        body('Task.description' , 'Invalid description').notEmpty().withMessage('Description is Required').trim().isLength({min:6 , max:400}),
         
         // checking image value
         body('Task.image' , "Invalid Image URL").trim().isURL(),

@@ -9,7 +9,7 @@ const CheckUpdateFormValues = require('../Utils/UpdateUserCheck');
 
 router.get('/GetUser/:userId' , GetUserById);
 
-router.put('/updateUser/:userId' , CheckUpdateFormValues()  ,updateUser);
+router.patch('/updateUser/:userId' , CheckUpdateFormValues()  , updateUser);
 
 router.delete('/deleteUser/:userId' , DeleteUser);
 

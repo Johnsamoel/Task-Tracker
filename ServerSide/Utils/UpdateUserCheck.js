@@ -18,7 +18,7 @@ const CheckUpdateFormValues = () => {
             const userData = await User.findOne({ email: value });
             if (userData) {
                  throw new Error("The email Already Exists")
-              }
+            }      
         }),
         
         // checking password value
