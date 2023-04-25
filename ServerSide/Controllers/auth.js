@@ -1,6 +1,9 @@
 const bycrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
+// importing enviroment varaiables
 const { HASHING_SALTROUND, JWT_SECRET } = require("../configuration");
+
 // User Model
 const User = require("../Models/user");
 // validator results
@@ -22,7 +25,8 @@ const RegisterUser = async (req, res, next) => {
       password,
       parseInt(HASHING_SALTROUND)
     );
-    const UserData = new User({ ...req.body, password: hasedPassword });
+
+    const UserData = new User({ ...req.body, password: hasedPassword  , avatar: req.file.path});
 
     // add the new user to the db
     const AddingUserResult = await UserData.save();
@@ -33,7 +37,7 @@ const RegisterUser = async (req, res, next) => {
       res.status(400).json({ message: "something went wrong" });
     }
   } catch (error) {
-    error.message="Server Is Not Responding, Please Try Again Later."
+    error.message= error.message
     error.StatusCode=500
     next(error)
   }
@@ -54,7 +58,7 @@ const Login = async (req, res, next) => {
     return;
 
   } catch (error) {
-    error.message="Server Is Not Responding, Please Try Again Later."
+    error.message= error.message
     error.StatusCode=500
     next(error)  }
 };
