@@ -7,6 +7,8 @@ const User = require('../Models/user');
 // importing the validator
 const { validationResult } = require('express-validator')
 
+// Delete Related files fn.
+const {DeleteFileByPath} = require('../Utils/DeleteFile')
 
 
 // Get Task by id
@@ -44,7 +46,7 @@ const AddTask = async (req, res, next) => {
     }
 
     // creating new Task obj based on Task schema
-    const Taskobj = new Task(req.body.Task);
+    const Taskobj = new Task({...req.body.Task , image: req.file && req.file.path ? req.file.path : '' });
 
     // adding user Id Reference to the Task.
     Taskobj.userId = new mongoose.Types.ObjectId(req.userId);
@@ -80,10 +82,15 @@ const DeleteTask = async (req, res,next) => {
     // Find Task by ID.
     const TaskFindingResult = await Task.findByIdAndDelete(req.params.TaskId)
 
+    //  delete task related image if any.
+    if(TaskFindingResult.image) {
+      DeleteFileByPath(TaskFindingResult.image);
+    }
+
     // validating the result
     if (TaskFindingResult) {
 
-      const updateUserDataResult =await User.find({ tasks: { $eq:req.params.TaskId  } }).updateMany({$pull: { tasks: req.params.TaskId }}).exec()
+    const updateUserDataResult =await User.find({ tasks: { $eq:req.params.TaskId  } }).updateMany({$pull: { tasks: req.params.TaskId }}).exec()
 
      if(updateUserDataResult) res.status(200).json({ message: "Item was deleted successfully" });
     } else {
@@ -113,13 +120,20 @@ const updateTask = async (req, res, next) => {
     }
 
     // finding Task by id.
-    const TaskObj = await Task.findByIdAndUpdate(req.params.TaskId).exec()
+    const TaskObj = await Task.findByIdAndUpdate(req.params.TaskId).exec();
+
+    // delete task old image if there's a new one
+    if(req.file && req.file.path && TaskObj.image) {
+      DeleteFileByPath(TaskObj.image);
+    }
 
     if (TaskObj) {
       for (let key in req.body.Task) {
         if (req.body.Task[key]) TaskObj[key] = req.body.Task[key]; // setting the values dynamically
       }
       
+      // keeping the same value in case there is no updated one provided
+      TaskObj.image = req.file && req.file.path ? req.file.path : TaskObj.image
 
       // saving update into db.
       const UpdatingResult = await TaskObj.save();

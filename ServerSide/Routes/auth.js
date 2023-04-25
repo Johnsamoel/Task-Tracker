@@ -4,12 +4,17 @@ const router = express.Router();
 
 const { RegisterUser , Login , Logout} = require('../Controllers/auth');
 
-const CheckRegisterFormValues = require('../Utils/UserRegisterValidation');
-
+// user fileds validations
 const CheckLoginFormValues = require('../Utils/UserLoginValidation');
 
+// multer to upload files.
+const multer = require('multer');
 
-router.post('/register' , CheckRegisterFormValues() , RegisterUser);
+// importing multer configuration objs
+const {AvatarStorage  , fileFilter} = require('../Utils/MulterConfigurations')
+
+
+router.post('/register' , multer({storage: AvatarStorage , fileFilter: fileFilter , limits: { fileSize: 10 * 1024 * 1024 }}).single('avatar') , RegisterUser);
 
 router.post('/login' , CheckLoginFormValues() , Login);
 

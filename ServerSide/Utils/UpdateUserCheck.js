@@ -1,8 +1,6 @@
 // importing validator library
-const {body, check} = require('express-validator');
+const {check} = require('express-validator');
 
-// importing User model.
-const User = require('../Models/user');
 
 const CheckUpdateFormValues = () => {
 
