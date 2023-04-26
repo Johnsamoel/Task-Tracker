@@ -1,6 +1,7 @@
 // importing validator library
 const {body} = require('express-validator');
-const bcrypt = require('bcryptjs')
+
+
 
 // importing User model.
 const User = require('../Models/user');
@@ -20,7 +21,9 @@ const CheckLoginFormValues = () => {
         }),
         // checking password value
         body('password' , 'Invalid Credentials').isLength({min: 6 , max: 12}).notEmpty().withMessage('Password is Required').trim().custom(async(value , {req}) => {
-            bcrypt.compare(value, user.password, (error , success) => {
+
+             bcrypt.compare(value, user.password, (error , success) => {
+
                 if(error){
                     throw new Error("Invalid Credentials !!")
                 }else {

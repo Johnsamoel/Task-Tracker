@@ -44,8 +44,7 @@ const UserSchema = mongoose.Schema({
         ref: 'Task'
     },
     avatar: {
-        type: String,
-        required: false
+        type: String
     },
     role: {
         type: String,

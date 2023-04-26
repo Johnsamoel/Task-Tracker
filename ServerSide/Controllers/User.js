@@ -6,6 +6,9 @@ const Task = require("../Models/Task");
 // validator results
 const { validationResult } = require("express-validator");
 
+// delete File by path Fn
+const { DeleteFileByPath } = require('../Utils/DeleteFile')
+
 // Get users by id
 const GetUserById = async (req, res, next) => {
   try {
@@ -33,12 +36,20 @@ const GetUserById = async (req, res, next) => {
 const DeleteUser = async (req, res, next) => {
 
   try {
+    
     if (!req.params.userId) {
       res.status(404).json({ message: "You have to add user id" })
       return;
     }
+    
     // Delete user by id.
-    const result = await User.findByIdAndDelete(req.params.userId).exec()
+    const result = await User.findByIdAndDelete(req.params.userId).exec();
+
+    // delete related files first.
+    if(result.avatar) {
+      DeleteFileByPath(result.avatar);
+    }
+
     // checking deletion result.
     if (result) {
       const result =await Task.find({ userId: { $eq:req.params.userId  } }).updateMany({$pull: { userId: req.params.userId }}).exec()
@@ -68,17 +79,26 @@ const updateUser = async (req, res, next) => {
     if (!validationvalues.isEmpty()) {
       return res.status(422).json({ message: validationvalues.array()[0].msg });
     }
+    
 
     // find user and update data.
     const userObj = await User.findByIdAndUpdate(req.params.userId).exec()
 
+    // deleting user related files
+    if(req.file && req.file.path && userObj.avatar){
+      DeleteFileByPath(userObj.avatar)
+    }
+
     // validating user and setting values to user object
     if (userObj) {
 
-      for (const key in req.body.userData) {
+      for (let key in req.body.userData) {
         if (req.body.userData[key] ) userObj[key] = req.body.userData[key]; // setting the values dynamically
         if(key === "password") continue;
       }    
+
+      // keeping the same value in case there is no updated one provided
+      userObj.avatar = req.file && req.file.path ? req.file.path : userObj.avatar
 
       const updateResult = await userObj.save();
       console.log(updateResult)

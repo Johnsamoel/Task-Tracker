@@ -6,9 +6,11 @@ const User = require("../Models/user");
 
 // Get All users
 const GetUsers = async (req, res, next) => {
+
     const pageNumber=parseInt(req.query.pageNumber)
     const limit=10
     const skipDocumentsNumber= (pageNumber-1)*limit
+
   try {
     // fetching all users
     const Users = await User.find().limit(limit).skip(skipDocumentsNumber).exec()
@@ -20,13 +22,18 @@ const GetUsers = async (req, res, next) => {
     }
   } catch (error) {
     error= new Error(error)
+
     error.StatusCode=500
     next(error)  }
 };
+
+// Get all Tasks
 const GetAllTasks = async (req, res, next) => {
+
     const pageNumber=parseInt(req.query.pageNumber)
     const limit=10
     const skipDocumentsNumber= (pageNumber-1)*limit
+    
     try {
       // find Tasks All Tasks
       const Tasks = await Task.find().populate({path:'userId',select:'name avatar'}).limit(limit).skip(skipDocumentsNumber).exec()
@@ -38,6 +45,7 @@ const GetAllTasks = async (req, res, next) => {
       }
     } catch (error) {
       error = error
+
       error.StatusCode=500
       next(error)
     }

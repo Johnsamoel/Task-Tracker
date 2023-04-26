@@ -6,4 +6,5 @@ const { IsAuthenticated } = require('../middleware/IsAuthenticated');
 
 router.get('/users?:pageNumber',IsAuthenticated, GetUsers)
 router.get("/tasks?:pageNumber",IsAuthenticated, GetAllTasks)
+
 module.exports = router;
