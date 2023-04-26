@@ -2,8 +2,6 @@
 const User = require("../Models/user");
 const Task = require("../Models/Task");
 
-// importing bycrypt 
-const bycrypt = require('bcryptjs');
 
 // validator results
 const { validationResult } = require("express-validator");
@@ -25,7 +23,7 @@ const GetUserById = async (req, res, next) => {
       res.status(404).send({ message: "User was Not Found" });
     }
   } catch (error) {
-    error.message=error.message
+    error= new Error(error)
     error.StatusCode=500
     next(error)
   }
@@ -49,7 +47,7 @@ const DeleteUser = async (req, res, next) => {
       res.status(400).json({ message: "Something went wrong" });
     }
   } catch (error) {
-    error.message=error.message
+    error= new Error(error)
     error.StatusCode=500
     next(error)
   }
@@ -57,6 +55,7 @@ const DeleteUser = async (req, res, next) => {
 
 // update user
 const updateUser = async (req, res, next) => {
+  
   try {
 
     if(Object.values(req.body.userData).every((item) => item === "" )){
@@ -82,20 +81,24 @@ const updateUser = async (req, res, next) => {
       }    
 
       const updateResult = await userObj.save();
-      
+      console.log(updateResult)
       if (updateResult) {
-        res.status(200).json({ message: "item was updated successfully" });
+       res.status(200).json({ message: "item was updated successfully" });
+       
       } else {
         res.status(404).json({ message: "something went wrong" });
       }
+      
     } else {
         res.status(404).json({ message: "item wasn't found" });
     }
-
+    return userObj;
   } catch (error) {
-    error.message = error.message
+    error= new Error(error)
     error.StatusCode=500
+    
     next(error)
+    return error
   }
 };
 
@@ -116,7 +119,7 @@ const getUserTasks = async (req, res, next) => {
     }
     
   } catch (error) {
-    error.message=error.message
+    error= new Error(error)
     error.StatusCode=500
     next(error)
 

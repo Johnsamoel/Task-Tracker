@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { HASHING_SALTROUND } = require("../configuration");
 
 const bcrypt = require('bcryptjs');
 
@@ -65,7 +66,7 @@ UserSchema.pre('save', async function () {
     const userdoc = this;
     
     //hashing
-    const hashed = await bcrypt.hash(userdoc.password, 10);
+    const hashed = await bcrypt.hash(userdoc.password, parseInt(HASHING_SALTROUND));
 
     userdoc.password = hashed;
   })

@@ -10,16 +10,17 @@ const CheckTaskFormValues = require('../Utils/CreateTaskValidation');
 
 // task update validation fn
 const CheckUpdateTaskFormValues = require('../Utils/UpdateTaskValidation');
+const { IsAuthenticated } = require('../middleware/IsAuthenticated');
 
 
 router.post('/addTask', CheckTaskFormValues() ,AddTask)
 
-router.get( '/GetTask/:TaskId' , GetTaskById)
+router.get( '/GetTask/:TaskId',IsAuthenticated , GetTaskById)
 
-router.delete( '/deleteTask/:TaskId' , DeleteTask)
+router.delete( '/deleteTask/:TaskId',IsAuthenticated , DeleteTask)
 
-router.patch( '/editTask/:TaskId' , CheckUpdateTaskFormValues() ,updateTask)
+router.patch( '/editTask/:TaskId' ,IsAuthenticated, CheckUpdateTaskFormValues() ,updateTask)
 
-router.get('/userTasks?:pageNumber',getUserTasks)
+router.get('/userTasks?:pageNumber',IsAuthenticated,getUserTasks)
 
 module.exports = router;

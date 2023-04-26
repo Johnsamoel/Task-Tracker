@@ -19,7 +19,7 @@ const GetUsers = async (req, res, next) => {
       res.status(400).json({ message: "something went wrong" });
     }
   } catch (error) {
-    error.message="Server Is Not Responding, Please Try Again Later."
+    error= new Error(error)
     error.StatusCode=500
     next(error)  }
 };
@@ -37,7 +37,7 @@ const GetAllTasks = async (req, res, next) => {
         res.status(400).json({ message: "something went wrong" });
       }
     } catch (error) {
-      error.message="Server Is Not Responding, Please Try Again Later."
+      error = error
       error.StatusCode=500
       next(error)
     }

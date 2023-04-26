@@ -9,7 +9,7 @@ const CheckRegisterFormValues = require('../Utils/UserRegisterValidation');
 const CheckLoginFormValues = require('../Utils/UserLoginValidation');
 
 
-router.post('/register' , CheckRegisterFormValues() , RegisterUser);
+router.post('/register', RegisterUser);
 
 router.post('/login' , CheckLoginFormValues() , Login);
 
