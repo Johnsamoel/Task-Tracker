@@ -101,7 +101,6 @@ const updateUser = async (req, res, next) => {
       userObj.avatar = req.file && req.file.path ? req.file.path : userObj.avatar
 
       const updateResult = await userObj.save();
-      console.log(updateResult)
       if (updateResult) {
        res.status(200).json({ message: "item was updated successfully" });
        

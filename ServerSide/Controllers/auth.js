@@ -11,6 +11,7 @@ const { validationResult } = require("express-validator");
 
 // Register a new user
 const RegisterUser = async (req, res, next) => {
+  
   const ValidationValues = validationResult(req);
 
   try {
@@ -26,7 +27,7 @@ const RegisterUser = async (req, res, next) => {
       parseInt(HASHING_SALTROUND)
     );
 
-    const UserData = new User({ ...req.body, password: hasedPassword  , avatar: req.file.path});
+    const UserData = new User({ ...req.body, password: hasedPassword  , avatar:req.file&& req.file.path?req.file.path:""});
 
     // add the new user to the db
     const AddingUserResult = await UserData.save();

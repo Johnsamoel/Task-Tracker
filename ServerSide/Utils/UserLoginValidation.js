@@ -1,7 +1,7 @@
 // importing validator library
 const {body} = require('express-validator');
 
-
+const bcrypt= require("bcryptjs")
 
 // importing User model.
 const User = require('../Models/user');
