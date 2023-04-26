@@ -21,7 +21,8 @@ const GetUsers = async (req, res, next) => {
       res.status(400).json({ message: "something went wrong" });
     }
   } catch (error) {
-    error.message= error.message
+    error= new Error(error)
+
     error.StatusCode=500
     next(error)  }
 };
@@ -43,7 +44,8 @@ const GetAllTasks = async (req, res, next) => {
         res.status(400).json({ message: "something went wrong" });
       }
     } catch (error) {
-      error.message= error.message
+      error = error
+
       error.StatusCode=500
       next(error)
     }

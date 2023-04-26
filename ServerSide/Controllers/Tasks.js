@@ -30,7 +30,7 @@ const GetTaskById = async (req, res, next) => {
       res.status(400).json({ message: "Task Not Found" });
     }
   } catch (error) {
-    error.message=error.message
+    error= new Error(error)
     error.StatusCode=500
     next(error)
   }
@@ -65,7 +65,7 @@ const AddTask = async (req, res, next) => {
       res.status(404).json({ message: "something went wrong" });
     }
   } catch (error) {
-    error.message=error.message
+    error= new Error(error)
     error.StatusCode=500
     next(error)
   }
@@ -97,7 +97,7 @@ const DeleteTask = async (req, res,next) => {
       res.status(400).json({ message: "Something went wrong" });
     }
   } catch (error) {
-    error.message=error.message
+    error= new Error(error)
     error.StatusCode=500
     next(error)
   }
@@ -148,7 +148,7 @@ const updateTask = async (req, res, next) => {
         res.status(404).json({ message: "item wasn't found" });
       }
   } catch (error) {
-    error.message= error.message
+    error= new Error(error)
     error.StatusCode=500
     next(error)
   }

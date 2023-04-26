@@ -37,9 +37,11 @@ const RegisterUser = async (req, res, next) => {
       res.status(400).json({ message: "something went wrong" });
     }
   } catch (error) {
-    error.message= error.message
+    error= new Error(error)
+
     error.StatusCode=500
     next(error)
+    return error
   }
 };
 
@@ -58,9 +60,14 @@ const Login = async (req, res, next) => {
     return;
 
   } catch (error) {
-    error.message= error.message
+
+    error= new Error(error)
+
     error.StatusCode=500
-    next(error)  }
+    next(error) 
+    return error
+  
+  }
 };
 
 // log user out

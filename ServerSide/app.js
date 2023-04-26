@@ -41,7 +41,7 @@ app.use( express.static(path.join(__dirname , 'Public/Avatars')) )
 app.use('/auth',Authentication);
 
 // check if the user is Authenticated first.
-app.use(IsAuthenticated)
+
 
 app.use('/dashboard',adminDahsboard)
 
