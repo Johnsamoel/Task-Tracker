@@ -1,7 +1,8 @@
 import React from "react";
 import { createPopper } from "@popperjs/core";
+import Image from "next/image";
 
-const UserDropdown = () => {
+const UserDropdown = (props:{transparent: boolean}) => {
   // dropdown props
   const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
   const btnDropdownRef = React.createRef<HTMLAnchorElement>();
@@ -28,11 +29,18 @@ const UserDropdown = () => {
       >
         <div className="items-center flex">
           <span className="w-12 h-12 text-sm text-white bg-blueGray-200 inline-flex items-center justify-center rounded-full">
-            <img
-              alt="..."
-              className="w-full rounded-full align-middle border-none shadow-lg"
-              src=""
-            />
+          <button
+                  className={
+                    (props.transparent
+                      ? "bg-white text-gray-800 active:bg-gray-100"
+                      : "bg-pink-500 text-white active:bg-pink-600") +
+                    " text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3"
+                  }
+                  type="button"
+                  style={{ transition: "all .15s ease" }}
+                >
+                  <i className="fas fa-arrow-alt-circle-down"></i> Login
+            </button>
           </span>
         </div>
       </a>
