@@ -11,7 +11,8 @@ const CheckLoginFormValues = require('../Utils/UserLoginValidation');
 const multer = require('multer');
 
 // importing multer configuration objs
-const {AvatarStorage  , fileFilter} = require('../Utils/MulterConfigurations')
+const {AvatarStorage  , fileFilter} = require('../Utils/MulterConfigurations');
+const { IsAuthenticated } = require('../middleware/IsAuthenticated');
 
 
 
@@ -20,7 +21,7 @@ router.post('/register' , multer({storage: AvatarStorage , fileFilter: fileFilte
 
 router.post('/login' , CheckLoginFormValues() , Login);
 
-router.post('/logout' , Logout);
+router.get('/logout' ,IsAuthenticated, Logout);
 
 
 module.exports = router;

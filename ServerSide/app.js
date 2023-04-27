@@ -1,4 +1,5 @@
 const express = require('express');
+const cookieParser = require('cookie-parser')
 const app = require("./connections");
 
 // importing path module
@@ -27,10 +28,10 @@ const UserRoutes = require('./Routes/user')
 
 // 404 Route
 const NotFoundRoute = require('./Routes/NotFoud');
+app.use(cookieParser());
 
 // cors to specify which site to serve
-app.use(cors())
-
+app.use(cors({ origin: true, credentials: true }))
 // parsing json data
 app.use(express.json());
 
