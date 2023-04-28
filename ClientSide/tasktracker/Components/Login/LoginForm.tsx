@@ -1,12 +1,14 @@
 import { loginState } from "@/models/loginModel";
 import { loginUser } from "@/store/middlewares/getUserInfoMiddleware";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from 'next/link'
 import { loginSchema } from "@/utils/validationLoginForm";
+import { useRouter } from "next/router";
 
 
 const LoginForm = () => {
+  
   const loginIntialState: loginState = {
     email: "",
     password: "",
@@ -15,18 +17,26 @@ const LoginForm = () => {
     name: "",
     errorMessage: "",
   };
+
   const [state, setLoginState] = useState<loginState>(loginIntialState);
   const [error, setError] = useState(errorObj);
 
   const dispatch = useDispatch();
   const store:any = useSelector((state) => state);
+  const router= useRouter()
   const handleLoginFormChange = (name: string, value: string) => {
     setLoginState((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
+
   console.log(store, "store");
+useEffect(()=>{
+if(store.userAuthentication.Success){
+router.replace('/Dashboard')
+}
+},[store.userAuthentication.Success])
   const handleErrorObj = (name: string, errorMessage: string) => {
     setError((prevState) => ({
       ...prevState,
