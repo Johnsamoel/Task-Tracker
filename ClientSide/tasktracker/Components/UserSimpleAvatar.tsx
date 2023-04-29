@@ -9,7 +9,7 @@ const UserSimpleAvatar = () => {
 
         <div className="flex justify-start align-top h-full w-3/6 flex-col">
         <p>John & menna</p>
-        <Link href="/">
+        <Link href="/Dashboard/Profile">
             <p className="font-semibold text-xs text-slate-700">View Profile</p>
         </Link>
         </div>
