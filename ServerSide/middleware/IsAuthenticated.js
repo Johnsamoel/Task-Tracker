@@ -5,7 +5,10 @@ const { JWT_SECRET } = require("../configuration");
 
 const IsAuthenticated = async (req, res, next) => {
   try {
-    const result = jwt.verify(req.body.token,JWT_SECRET);
+    if(!req.cookies.jwt){
+    throw new Error("Not authorized")
+    }
+    const result = jwt.verify(req.cookies.jwt,JWT_SECRET);
    
     const user = await UserModel.findById({ _id: result.id });
     if (user) {

@@ -57,8 +57,11 @@ const Login = async (req, res, next) => {
 
     // creating & returning token
     const token = jwt.sign({ id: req.user._id }, JWT_SECRET);
-    res.status(200).json({ token });
-    return;
+  res.cookie('jwt', token, {
+      httpOnly: true,
+      sameSite: 'none',
+    })
+    res.send("You are Logged in");
 
   } catch (error) {
 
@@ -72,7 +75,21 @@ const Login = async (req, res, next) => {
 };
 
 // log user out
-const Logout = (req, res) => {};
+const Logout = (req, res) => {
+try {
+  
+  return res
+  .clearCookie("jwt")
+  .status(200)
+  .json({ message: "Successfully logged out " });
+} catch (error) {
+  error= new Error(error)
+
+    error.StatusCode=500
+    next(error)
+}
+  
+};
 
 module.exports = {
   RegisterUser,
