@@ -3,12 +3,32 @@ import BarChart from "@/Components/BarChart";
 import Pagination from "@/Components/Pagination";
 import Sidebar from "@/Components/Sidebar";
 import TaskCard from "@/Components/TaskCard";
+import axios from "axios";
+import useSWR from "swr";
+import { useDispatch, useSelector } from "react-redux";
+import { convertToTaskModel } from "@/dataConverters/taskConverter";
+import { TaskModel } from "@/models/taskModel";
 import NewTask from "@/Components/NewTask";
 import { useState } from "react";
 
-const Dashboard = () => {
+const fetcher = (url: string) =>
+  axios.get(url, { withCredentials: true }).then((res) => {
+    let tasks = convertToTaskModel(res.data.tasks);
+    return {
+      tasks: tasks,
+      totalPages: res.data.totalPages,
+    };
+  });
 
+const Dashboard = (props: any) => {
+  const store: any = useSelector((state) => state);
   const [showModal, setshowModal] = useState(false)
+
+  const { data, error } = useSWR(
+    `http://localhost:3001/userTasks/${store.userAuthentication.userInfo._id}?pageNumber=1`,
+    fetcher
+  );
+  console.log(data, "data");
 
   return (
     <div className="bg-slate-100 h-screen">
@@ -24,25 +44,26 @@ const Dashboard = () => {
           backgroundRepeat: "no-repeat",
         }}>
               {/* Card stats */}
-              <TaskCard Title="Back end" description="ensure authentication" TaskDate={new Date().toDateString()} status="Not Started"/>
-              <TaskCard Title="Back end" description="ensure authentication" TaskDate={new Date().toDateString()} status="Inprogress"/>
-              <TaskCard Title="Back end" description="ensure authentication" TaskDate={new Date().toDateString()} status="Cancelled"/>
-              <TaskCard Title="Back end" description="ensure authentication" TaskDate={new Date().toDateString()} status="Completed"/>
-              <TaskCard Title="Back end" description="ensure authentication" TaskDate={new Date().toDateString()} status="Not Started"/>
-              <TaskCard Title="Back end" description="ensure authentication" TaskDate={new Date().toDateString()} status="Inprogress"/>
-              <TaskCard Title="Back end" description="ensure authentication" TaskDate={new Date().toDateString()} status="Cancelled"/>
-              <TaskCard Title="Back end" description="ensure authentication" TaskDate={new Date().toDateString()} status="Completed"/>
-              <TaskCard Title="Back end" description="ensure authentication" TaskDate={new Date().toDateString()} status="Not Started"/>
-              <TaskCard Title="Back end" description="ensure authentication" TaskDate={new Date().toDateString()} status="Inprogress"/>
-
-
+              {data &&
+                data.tasks.length !== 0 &&
+                data.tasks.map((task: TaskModel) => {
+                  return (
+                    <TaskCard
+                      key={task._id}
+                      Title={task.title}
+                      description={task.description}
+                      TaskDate={new Date(task.creationDate).toDateString()}
+                      status={task.status}
+                    />
+                  );
+                })}
             </div>
             <div className="flex justify-end items-center w-full">
           { !showModal && <AddIcon ClickFn={() => { setshowModal(true) }}/>} 
              { showModal && <NewTask showModalfn={() => { setshowModal(false) }} />}
             </div>
             <div className="flex justify-center items-center ">
-              <Pagination destinationUrl="/" totalNumber={10}  />
+              <Pagination destinationUrl="/" totalNumber={data ? data.totalPages : 1} />
             </div>
           </div>
         </div>
