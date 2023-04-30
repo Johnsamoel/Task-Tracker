@@ -23,7 +23,7 @@ const TaskCard = (props:{Title:string , description:string , status:string , Tas
           <span className="text-emerald-500 mr-2">
             <i className="fas fa-arrow-up"></i> {props.status}
           </span>
-          <span className="whitespace-nowrap">Since {props.TaskDate}</span>
+          <span className="whitespace-nowrap"> {props.TaskDate}</span>
         </p>
 
         }
@@ -31,7 +31,7 @@ const TaskCard = (props:{Title:string , description:string , status:string , Tas
           <span className="text-red-500 mr-2">
             <i className="fas fa-arrow-up"></i> {props.status}
           </span>
-          <span className="whitespace-nowrap">Since {props.TaskDate}</span>
+          <span className="whitespace-nowrap"> {props.TaskDate}</span>
         </p>
 
         }
@@ -39,7 +39,7 @@ const TaskCard = (props:{Title:string , description:string , status:string , Tas
           <span className="text-yellow-500 mr-2">
             <i className="fas fa-arrow-up"></i> {props.status}
           </span>
-          <span className="whitespace-nowrap">Since {props.TaskDate}</span>
+          <span className="whitespace-nowrap"> {props.TaskDate}</span>
         </p>
 
         }
@@ -47,7 +47,7 @@ const TaskCard = (props:{Title:string , description:string , status:string , Tas
           <span className="text-blue-500 mr-2">
             <i className="fas fa-arrow-up"></i> {props.status}
           </span>
-          <span className="whitespace-nowrap">Since {props.TaskDate}</span>
+          <span className="whitespace-nowrap"> {props.TaskDate}</span>
         </p>
 
         }

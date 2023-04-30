@@ -1,3 +1,4 @@
+import AddIcon from "@/Components/AddIcon";
 import BarChart from "@/Components/BarChart";
 import Pagination from "@/Components/Pagination";
 import Sidebar from "@/Components/Sidebar";
@@ -7,6 +8,8 @@ import useSWR from "swr";
 import { useDispatch, useSelector } from "react-redux";
 import { convertToTaskModel } from "@/dataConverters/taskConverter";
 import { TaskModel } from "@/models/taskModel";
+import NewTask from "@/Components/NewTask";
+import { useState } from "react";
 
 const fetcher = (url: string) =>
   axios.get(url, { withCredentials: true }).then((res) => {
@@ -19,6 +22,8 @@ const fetcher = (url: string) =>
 
 const Dashboard = (props: any) => {
   const store: any = useSelector((state) => state);
+  const [showModal, setshowModal] = useState(false)
+
   const { data, error } = useSWR(
     `http://localhost:3001/userTasks/${store.userAuthentication.userInfo._id}?pageNumber=1`,
     fetcher
@@ -30,12 +35,14 @@ const Dashboard = (props: any) => {
       <Sidebar />
       <div className="relative md:ml-64 bg-blueGray-100  h-full">
         {/* Header */}
-        <div className="relative bg-slate-900  pt-12 h-full">
+        <div className="relative bg-slate-900  pt-10 h-full">
           <div className="px-4 md:px-10 mx-auto w-full h-full flex gap-5 flex-col">
-            <p className=" font-bold text-left text-pink-500 pl-5 text-xl">
-              Your Tasks
-            </p>
-            <div className="flex flex-wrap gap-5 justify-center items-center ">
+            <p className=" font-bold text-left text-pink-500 pl-5 text-xl">Your Tasks</p>
+            <div className="flex flex-wrap gap-5 justify-center items-center "         style={{
+          backgroundImage: "url(" + "/register_bg_2.png" + ")",
+          backgroundSize: "100%",
+          backgroundRepeat: "no-repeat",
+        }}>
               {/* Card stats */}
               {data &&
                 data.tasks.length !== 0 &&
@@ -51,11 +58,12 @@ const Dashboard = (props: any) => {
                   );
                 })}
             </div>
-            <div className="flex justify-center items-center">
-              <Pagination
-                destinationUrl="/"
-                totalNumber={data ? data.totalPages : 1}
-              />
+            <div className="flex justify-end items-center w-full">
+          { !showModal && <AddIcon ClickFn={() => { setshowModal(true) }}/>} 
+             { showModal && <NewTask showModalfn={() => { setshowModal(false) }} />}
+            </div>
+            <div className="flex justify-center items-center ">
+              <Pagination destinationUrl="/" totalNumber={data ? data.totalPages : 1} />
             </div>
           </div>
         </div>
