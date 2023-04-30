@@ -34,7 +34,7 @@ const LoginForm = () => {
   console.log(store, "store");
 useEffect(()=>{
 if(store.userAuthentication.Success){
-router.replace('/Dashboard')
+router.replace(`/Dashboard`)
 }
 },[store.userAuthentication.Success])
   const handleErrorObj = (name: string, errorMessage: string) => {
