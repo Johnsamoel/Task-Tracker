@@ -22,7 +22,7 @@ const multer = require('multer');
 const { TaskImageStorage , fileFilter} = require('../Utils/MulterConfigurations')
 
 
-router.post('/addTask', multer({storage: TaskImageStorage , fileFilter: fileFilter , limits: { fileSize: 10 * 1024 * 1024 }}).single('image') , CheckTaskFormValues() ,AddTask)
+router.post('/addTask',IsAuthenticated, multer({storage: TaskImageStorage , fileFilter: fileFilter , limits: { fileSize: 10 * 1024 * 1024 }}).single('image') , CheckTaskFormValues() ,AddTask)
 
 router.get( '/GetTask/:TaskId',IsAuthenticated , GetTaskById)
 
@@ -31,7 +31,7 @@ router.delete( '/deleteTask/:TaskId',IsAuthenticated , DeleteTask)
 
 router.patch( '/editTask/:TaskId' ,IsAuthenticated, multer({storage: TaskImageStorage , fileFilter: fileFilter , limits: { fileSize: 10 * 1024 * 1024 }}).single('image') , CheckUpdateTaskFormValues() ,updateTask)
 
-router.get('/userTasks?:pageNumber',IsAuthenticated, getUserTasks)
+router.get('/userTasks/:userId',IsAuthenticated, getUserTasks) //add page number as query param
 
 
 module.exports = router;

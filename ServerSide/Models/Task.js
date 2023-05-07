@@ -37,6 +37,10 @@ const TaskSchema = mongoose.Schema({
         type:String,
         required:[true , "status is required"],
         enum:[ "Not Started","Inprogress", "Completed" , "Cancelled"]
+    },
+    creationDate:{
+        type:Date,
+        default: Date.now()
     }
 } , {collection : 'Tasks'})
 

@@ -31,7 +31,7 @@ const NotFoundRoute = require('./Routes/NotFoud');
 app.use(cookieParser());
 
 // cors to specify which site to serve
-app.use(cors({ origin: true, credentials: true }))
+app.use(cors({ origin: "http://localhost:3000", credentials: true }))
 // parsing json data
 app.use(express.json());
 
