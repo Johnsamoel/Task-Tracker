@@ -6,10 +6,11 @@ import TaskCard from "@/Components/TaskCard";
 import axios from "axios";
 import useSWR from "swr";
 import { useDispatch, useSelector } from "react-redux";
-import { convertToTaskModel } from "@/dataConverters/taskConverter";
+
 import { TaskModel } from "@/models/taskModel";
 import NewTask from "@/Components/NewTask";
 import { useState } from "react";
+import { convertToTaskModel } from "@/dataConverters.ts/taskConverter";
 
 const fetcher = (url: string) =>
   axios.get(url, { withCredentials: true }).then((res) => {
@@ -38,10 +39,11 @@ const Dashboard = (props: any) => {
         <div className="relative bg-slate-900  pt-10 h-full">
           <div className="px-4 md:px-10 mx-auto w-full h-full flex gap-5 flex-col">
             <p className=" font-bold text-left text-pink-500 pl-5 text-xl">Your Tasks</p>
-            <div className="flex flex-wrap gap-5 justify-center items-center "         style={{
+            <div className="flex flex-wrap gap-5 justify-center items-center"         style={{
           backgroundImage: "url(" + "/register_bg_2.png" + ")",
           backgroundSize: "100%",
           backgroundRepeat: "no-repeat",
+          
         }}>
               {/* Card stats */}
               {data &&
