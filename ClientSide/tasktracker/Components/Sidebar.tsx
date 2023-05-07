@@ -64,7 +64,7 @@ export default function Sidebar() {
               <li className="items-center rounded-md w-full hover:bg-pink-500 hover:text-white ">
                 <Link
                   className="text-pink-500 hover:text-white text-xs uppercase py-3 font-bold block"
-                  href="/Dashboard"
+                  href="/Dashboard/Tasks"
                 >
                   <i className="fas fa-tv opacity-75 mr-2 text-sm"></i>{" "}
                   Tasks
