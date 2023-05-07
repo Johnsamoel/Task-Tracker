@@ -15,7 +15,7 @@ const CheckTaskFormValues = () => {
         body('Task.description' , 'Invalid description').trim().isLength({min:6 , max:400}),
         
         // checking status value
-        body('Task.status' , "Invalid status value, Role should be Either 'Not Started' or 'Inprogress' or 'Completed' ").trim().custom((value , {req}) =>{
+        body('Task.status' , "Invalid status value, status should be Either 'Not Started' or 'Inprogress' or 'Completed' or 'Cancelled' ").trim().custom((value , {req}) =>{
                     if( !Task_Status[`${value}`] ){
                         return false
                     }
