@@ -9,7 +9,7 @@ interface state {
 
 const initialState: state = {
   Success: false,
-  userInfo: { _id: "", name: "", age: 0, email: "", role: "" },
+  userInfo:typeof window !== 'undefined'&& localStorage.getItem("userInfo")? JSON.parse(localStorage.getItem("userInfo") as string):{ _id: "", name: "", age: 0, email: "", role: "" },
   errorMessage:""
 };
 const authSlice = createSlice({

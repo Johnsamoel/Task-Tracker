@@ -36,7 +36,7 @@ const UserSchema = mongoose.Schema({
     password: {
         type: String,
         required: [true , "password is Required"],
-        minlength: [8 , "Password should be 8 characters"]
+        minlength: [4, "Password should be 4 characters"]
     },
     tasks: {
         type: [mongoose.Schema.Types.ObjectId],
