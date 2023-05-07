@@ -1,6 +1,6 @@
 const bycrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const _ = require("lodash");
 // importing enviroment varaiables
 const { HASHING_SALTROUND, JWT_SECRET } = require("../configuration");
 
@@ -59,9 +59,10 @@ const Login = async (req, res, next) => {
     const token = jwt.sign({ id: req.user._id }, JWT_SECRET);
   res.cookie('jwt', token, {
       httpOnly: true,
-      sameSite: 'none',
     })
-    res.send("You are Logged in");
+    const userInstance = _.omit(req.user.toJSON(), ["password","__v"]);
+
+    res.status(200).json(userInstance);
 
   } catch (error) {
 
