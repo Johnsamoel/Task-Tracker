@@ -3,9 +3,17 @@ import Link from "next/link";
 import NotificationDropdown from "../Components/NotificationDropdown";
 import UserDropdown from "../Components/UserDropdown";
 import UserSimpleAvatar from "./UserSimpleAvatar";
+import { useDispatch } from "react-redux";
+import { LogOutUser } from "@/store/middlewares/logOutMiddleware";
 
 export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
+  const dispatch = useDispatch()
+
+  const LogOutHandler = () => {
+    dispatch(LogOutUser() as unknown as any)
+  }
+
   return (
     <>
       <nav
@@ -61,7 +69,7 @@ export default function Sidebar() {
             </form>
             {/* Navigation */}
             <ul className="md:flex-col md:min-w-full flex flex-col list-none pt-10 ">
-              <li className="items-center rounded-md w-full hover:bg-pink-500 hover:text-white ">
+              <li className="items-center rounded-md w-full hover:bg-pink-500 hover:text-white cursor-pointer">
                 <Link
                   className="text-pink-500 hover:text-white text-xs uppercase py-3 font-bold block"
                   href="/Dashboard"
@@ -71,7 +79,7 @@ export default function Sidebar() {
                 </Link>
               </li>
 
-              <li className="items-center rounded-md w-full hover:bg-pink-500 hover:text-white ">
+              <li className="items-center rounded-md w-full hover:bg-pink-500 hover:text-white cursor-pointer">
                 <Link
                   className="text-pink-500 hover:text-white text-xs uppercase py-3 font-bold block"
                   href="/Dashboard/Friends"
@@ -82,14 +90,13 @@ export default function Sidebar() {
               </li>
 
 
-              <li className="items-center rounded-md w-full hover:bg-pink-500 hover:text-white ">
-                <Link
+              <li onClick={LogOutHandler} className="items-center rounded-md w-full hover:bg-pink-500 hover:text-white cursor-pointer">
+                <div
                   className="text-pink-500 hover:text-white text-xs uppercase py-3 font-bold block"
-                  href="/dashboard"
                 >
                   <i className="fas fa-tv opacity-75 mr-2 text-sm"></i>{" "}
                   Logout
-                </Link>
+                </div>
               </li>
 
  
