@@ -16,7 +16,7 @@ const GetUsers = async (req, res, next) => {
     const Users = await User.find().limit(limit).skip(skipDocumentsNumber).exec()
     // validating the result
     if (Users) {
-      res.status(200).json(Users);
+      res.status(200).json({users:Users, totalPages:Users.length/limit<=1?1:Users.length/limit<1});
     } else {
       res.status(400).json({ message: "something went wrong" });
     }
@@ -39,7 +39,7 @@ const GetAllTasks = async (req, res, next) => {
       const Tasks = await Task.find().populate({path:'userId',select:'name avatar'}).limit(limit).skip(skipDocumentsNumber).exec()
       // validating the result.
       if (Tasks) {
-        res.status(200).json(Tasks);
+        res.status(200).json({tasks:Tasks, totalPages:Tasks.length/limit<=1?1:Tasks.length/limit});
       } else {
         res.status(400).json({ message: "something went wrong" });
       }

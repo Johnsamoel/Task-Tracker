@@ -7,7 +7,8 @@ const Task = require("../Models/Task");
 const { validationResult } = require("express-validator");
 
 // delete File by path Fn
-const { DeleteFileByPath } = require('../Utils/DeleteFile')
+const { DeleteFileByPath } = require('../Utils/DeleteFile');
+const mongoose = require("mongoose");
 
 // Get users by id
 const GetUserById = async (req, res, next) => {
@@ -127,17 +128,20 @@ const getUserTasks = async (req, res, next) => {
     const skipDocumentsNumber= (pageNumber-1)*limit
   try {
     const userId = req.params.userId
+    console.log(userId)
     if (!userId) {
       res.status(400).json("User is not found")
     }
     const userTasks = await User.findById(userId).populate('tasks').limit(limit).skip(skipDocumentsNumber).exec()
+    console.log(userTasks,"tasksss")
     if(userTasks){
-      res.status(200).json(userTasks.tasks)
+      res.status(200).json({tasks:userTasks.tasks,totalPages:userTasks.tasks.length/limit<=1?1:userTasks.tasks.length/limit})
     }else{
       res.status(400).json("Something went wrong")
     }
     
   } catch (error) {
+    console.log(error,"err")
     error= new Error(error)
     error.StatusCode=500
     next(error)

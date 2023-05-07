@@ -20,8 +20,8 @@ const CheckRegisterFormValues = () => {
         
         // checking password value
         body('password' , 'Password should be at least 6 characters long and contains 2 symbols , 2 lowercases and 2 uppercases')
-        .isStrongPassword({minLength:6 ,minSymbols: 2, minLowercase:2})
-        .isLength({min: 6 , max: 12}).trim().notEmpty().withMessage('Password is Required'),
+        .isStrongPassword({minLength:8 ,minSymbols: 2, minLowercase:2})
+        .isLength({min: 8 , max: 12}).trim().notEmpty().withMessage('Password is Required'),
 
         // checking age value
         body('age' , 'Enter a number between 18 and 90')
