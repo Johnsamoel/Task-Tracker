@@ -1,7 +1,47 @@
 import Sidebar from "@/Components/Sidebar";
 import TaskForm from "@/Components/TaskForm";
+import { TaskModel } from "@/models/taskModel";
+import GetTaskInfo from "@/store/middlewares/getTaskMiddleware";
+import store from "@/store/store";
+import { convertToTaskModel } from "@/dataConverters.ts/taskConverter";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { useState , useEffect} from "react";
 
-const Task = () => {
+
+interface Taskprops {
+
+  task: TaskModel
+ 
+}
+
+const fetcher = (url: string) =>
+  axios.get(url, { withCredentials: true }).then((res) => {
+    return res.data
+    
+  });
+
+
+const Task = ({task}:Taskprops) => {
+
+  const [taskobj , setTaskobj] = useState({} as TaskModel);
+  const router = useRouter()
+
+  const {query} = router
+
+   
+    
+  useEffect(() => {
+
+    if(!query.Taskid) return
+
+    async function fetchData() {
+      const data = await fetcher(`http://localhost:3001/GetTask/${query.Taskid}`);
+      setTaskobj(data);
+    }
+    fetchData();
+  }, [query.Taskid]);
+
   return (
     <div className="bg-slate-100 h-screen">
       <Sidebar />
@@ -22,7 +62,7 @@ const Task = () => {
             >
               {/* Card stats */}
                 <div className=" rounded-lg  w-3/4 h-3/4">
-                <TaskForm />
+                <TaskForm {...taskobj} />
 
                 </div>
             </div>
@@ -33,5 +73,16 @@ const Task = () => {
     </div>
   );
 };
+
+// export async function getServerSideProps (context: { params: { Taskid: any; }; }) {
+//   const { Taskid } = context.params;
+
+//   store.dispatch(GetTaskInfo(Taskid))
+
+//   return {
+//     props: {  },
+//   };
+// }
+
 
 export default Task;

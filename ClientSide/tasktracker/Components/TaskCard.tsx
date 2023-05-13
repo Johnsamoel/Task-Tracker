@@ -1,7 +1,10 @@
+import Link from "next/link";
 
-const TaskCard = (props:{Title:string , description:string , status:string , TaskDate: string}) => {
+
+const TaskCard = (props:{Title:string , description:string , status:string , TaskDate: string , id:string}) => {
   return (
     <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
+      <Link href={`Tasks/${props.id}`}>
     <div className="relative flex flex-col min-w-0 break-words bg-slate-800 hover:bg-slate-700 hover:shadow-lg hover:shadow-pink-500 rounded mb-6 xl:mb-0 shadow-lg">
       <div className="flex-auto p-4">
         <div className="flex flex-wrap">
@@ -53,6 +56,7 @@ const TaskCard = (props:{Title:string , description:string , status:string , Tas
         }
       </div>
     </div>
+    </Link>
     </div>
   );
 };
