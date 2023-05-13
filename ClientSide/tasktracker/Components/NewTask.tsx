@@ -1,3 +1,4 @@
+import { newTaskSchema } from "@/utils/NewTaskValidation";
 import axios from "axios";
 import { useState } from "react";
 interface state {
@@ -6,6 +7,10 @@ interface state {
   status: string;
   image: any;
 }
+interface error {
+  name: string;
+  errorMessage: string;
+}
 const NewTask = (props: { showModalfn: any }) => {
   const task: state = {
     title: "",
@@ -13,24 +18,52 @@ const NewTask = (props: { showModalfn: any }) => {
     status: "",
     image: "",
   };
+  const errorObj: error = {
+    name: "",
+    errorMessage: "",
+  };
   const [taskdata, setTaskData] = useState<state>(task);
+  const [error, setError] = useState<error>(errorObj);
+  const handleErrorObj = (name: string, errorMessage: string) => {
+    setError((prevState) => ({
+      ...prevState,
+      name: name,
+      errorMessage: errorMessage,
+    }));
+  };
   const handleInputChange = (name: string, value: any) => {
     setTaskData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-  console.log(taskdata,"data")
   const submitTask = () => {
-    axios.post("http://localhost:3001/addTask",{
-      Task:{
-        title: taskdata.title,
-        description: taskdata.description,
-        status: taskdata.status
-      }
-    },{ withCredentials: true }).then((res)=>{
-setTaskData(task)
-    })
+    const validationResult = newTaskSchema.validate(taskdata);
+    if (!validationResult.error) {
+      handleErrorObj("", "");
+      axios
+        .post(
+          "http://localhost:3001/addTask",
+          {
+            Task: {
+              title: taskdata.title,
+              description: taskdata.description,
+              status: taskdata.status,
+            },
+          },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          setTaskData(task);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      const key = validationResult.error.details[0].path[0] as string;
+      const errorMessage = validationResult.error.message;
+      handleErrorObj(key, errorMessage);
+    }
   };
   return (
     <div
@@ -83,6 +116,11 @@ setTaskData(task)
             type="text"
           />
         </div>
+        {error.name === "title" && (
+                      <span>
+                        <small>{error.errorMessage}</small>
+                      </span>
+                    )}
       </div>
 
       <div className="m-1">
@@ -109,6 +147,11 @@ setTaskData(task)
           placeholder="Enter A description"
           rows={14}
         ></textarea>
+        {error.name === "description" && (
+                      <span>
+                        <small>{error.errorMessage}</small>
+                      </span>
+                    )}
       </div>
 
       <div className="relative w-full mb-3">
@@ -184,6 +227,11 @@ setTaskData(task)
             </label>
           </div>
         </div>
+        {error.name === "status" && (
+                      <span>
+                        <small>{error.errorMessage}</small>
+                      </span>
+                    )}
       </div>
 
       <div className="flex items-center flex-row justify-center">
@@ -226,6 +274,7 @@ setTaskData(task)
           Submit Task
         </button>
       </div>
+    
     </div>
   );
 };
