@@ -15,32 +15,15 @@ interface Taskprops {
  
 }
 
-const fetcher = (url: string) =>
-  axios.get(url, { withCredentials: true }).then((res) => {
-    return res.data
-    
-  });
-
 
 const Task = ({task}:Taskprops) => {
 
   const [taskobj , setTaskobj] = useState({} as TaskModel);
-  const router = useRouter()
+ 
 
-  const {query} = router
-
-   
-    
   useEffect(() => {
-
-    if(!query.Taskid) return
-
-    async function fetchData() {
-      const data = await fetcher(`http://localhost:3001/GetTask/${query.Taskid}`);
-      setTaskobj(data);
-    }
-    fetchData();
-  }, [query.Taskid]);
+    setTaskobj(task)
+  } , [task])
 
   return (
     <div className="bg-slate-100 h-screen">
@@ -74,15 +57,44 @@ const Task = ({task}:Taskprops) => {
   );
 };
 
-// export async function getServerSideProps (context: { params: { Taskid: any; }; }) {
-//   const { Taskid } = context.params;
 
-//   store.dispatch(GetTaskInfo(Taskid))
 
-//   return {
-//     props: {  },
-//   };
-// }
+export const getServerSideProps = async (context: any) => {
+  const Taskid  = context.params.Taskid;
+
+  if(!Taskid){
+    return {
+      redirect: {
+        destination: '/404',
+        permanent: false
+      }
+    };
+  }
+
+  const axiosInstance = axios.create({
+    withCredentials: true,
+    headers: {
+      Cookie: context.req.headers.cookie
+    }
+  });
+  
+ const FetchUserDataResult = await axiosInstance.get('http://localhost:3001/GetTask/' + Taskid)
+    
+  if(FetchUserDataResult.data){
+    return {
+      props: { task: FetchUserDataResult.data },
+    };
+  }else {
+    return {
+      redirect: {
+        destination: '/404',
+        permanent: false
+      }
+    };
+  }
+
+
+};
 
 
 export default Task;
