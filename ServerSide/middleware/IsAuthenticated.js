@@ -5,7 +5,6 @@ const { JWT_SECRET } = require("../configuration");
 
 const IsAuthenticated = async (req, res, next) => {
   try {
-    console.log(req.cookies.jwt , 'token in cookie')
     if(!req.cookies.jwt){
     throw new Error("Not authorized")
     }

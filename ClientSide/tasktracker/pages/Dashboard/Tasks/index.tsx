@@ -19,7 +19,7 @@ const fetcher = (url: string) =>
       tasks: tasks,
       totalPages: res.data.totalPages,
     };
-  });
+});
 
   
 const DashboardTasks = () => {
@@ -31,7 +31,6 @@ const DashboardTasks = () => {
     {refreshInterval:1000, revalidateOnReconnect:true}
   );
 
-  console.log(data, "data");
   return (
     <div className="bg-slate-100 h-screen">
     <Sidebar />
@@ -48,7 +47,7 @@ const DashboardTasks = () => {
           <div className="flex flex-wrap gap-5 justify-center items-center" >
             {/* Card stats */}
             {data &&
-              data.tasks.length !== 0&&
+              data.tasks.length !== 0 ?
               data.tasks.map((task: TaskModel) => {
                 return (
                   <TaskCard
@@ -60,7 +59,7 @@ const DashboardTasks = () => {
                     id={task._id}
                   />
                 );
-              })}
+              }): <p>No Tasks To show</p>}
               
           </div>
           <div className="flex justify-end items-center w-full absolute bottom-10 -left-10">

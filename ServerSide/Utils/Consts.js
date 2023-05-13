@@ -2,7 +2,7 @@
 
 const Task_Status = {
     "Not Started" : "Not Started",
-    InProgress : "Inprogress",
+    Inprogress : "Inprogress",
     Completed : "Completed",
     Cancelled : "Cancelled"
 }

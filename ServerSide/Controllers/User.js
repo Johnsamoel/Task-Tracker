@@ -19,10 +19,8 @@ const GetUserById = async (req, res, next) => {
     }
     // Getting user by id.
     const userData = await User.findById(req.params.userId).exec()
-    console.log(userData , "user data is here")
     //validating the result.
     if (userData) {
-      console.log(userData , 'final data result')
       res.status(200).json(userData);
     } else {
       res.status(404).json({ message: "User was Not Found" });
@@ -146,7 +144,35 @@ const getUserTasks = async (req, res, next) => {
 
   }
 }
+
+
+const getUserFriends = async (req, res, next) => {
+  const pageNumber=parseInt(req.query.pageNumber)
+    const limit=10
+    const skipDocumentsNumber= (pageNumber-1)*limit
+  try {
+    const userId = req.params.userId
+    if (!userId) {
+      res.status(400).json("User is not found")
+    }
+    const userData = await User.findById(userId).populate('friends').limit(limit).skip(skipDocumentsNumber).exec()
+    if(userData){
+      res.status(200).json({friends:userData.friends,totalPages:userData.friends.length/limit<=1?1:userData.friends.length/limit})
+    }else{
+      res.status(400).json("Something went wrong")
+    }
+    
+  } catch (error) {
+    error= new Error(error)
+    error.StatusCode=500
+    next(error)
+
+  }
+}
+
+
 module.exports = {
+  getUserFriends,
   GetUserById,
   DeleteUser,
   updateUser,

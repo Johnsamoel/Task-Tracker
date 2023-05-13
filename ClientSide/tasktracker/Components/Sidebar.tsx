@@ -3,6 +3,9 @@ import Link from "next/link";
 import NotificationDropdown from "../Components/NotificationDropdown";
 import UserDropdown from "../Components/UserDropdown";
 import dynamic from "next/dynamic";
+import { useDispatch , useSelector } from "react-redux";
+import { LogOutUser } from "@/store/middlewares/logOutMiddleware";
+import { useRouter } from "next/router";
 const UserSimpleAvatar = dynamic(
   () => import('./UserSimpleAvatar'),
   { ssr: false }
@@ -10,9 +13,11 @@ const UserSimpleAvatar = dynamic(
 export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
   const dispatch = useDispatch()
+  const router = useRouter()
 
   const LogOutHandler = () => {
     dispatch(LogOutUser() as unknown as any)
+    router.replace('/')
   }
 
   return (
