@@ -4,7 +4,7 @@ import Pagination from "@/Components/Pagination";
 import Sidebar from "@/Components/Sidebar";
 import TaskCard from "@/Components/TaskCard";
 import NewTask from "@/Components/NewTask";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useSWR from "swr";
 import { convertToTaskModel } from "@/dataConverters.ts/taskConverter";
@@ -25,11 +25,12 @@ const fetcher = (url: string) =>
 const DashboardTasks = () => {
   const [showModal, setshowModal] = useState(false);
   const store: any = useSelector((state) => state);
-
   const { data, error } = useSWR(
-    `http://localhost:3001/userTasks/${store.userAuthentication.userInfo._id}?pageNumber=1`,
-    fetcher
+    store.userAuthentication? `http://localhost:3001/userTasks/${store.userAuthentication.userInfo._id}?pageNumber=1`:null,
+    fetcher,
+    {refreshInterval:1000, revalidateOnReconnect:true}
   );
+
   console.log(data, "data");
   return (
     <div className="bg-slate-100 h-screen">
@@ -47,7 +48,7 @@ const DashboardTasks = () => {
           <div className="flex flex-wrap gap-5 justify-center items-center" >
             {/* Card stats */}
             {data &&
-              data.tasks.length !== 0 &&
+              data.tasks.length !== 0&&
               data.tasks.map((task: TaskModel) => {
                 return (
                   <TaskCard
@@ -60,6 +61,7 @@ const DashboardTasks = () => {
                   />
                 );
               })}
+              
           </div>
           <div className="flex justify-end items-center w-full absolute bottom-10 -left-10">
         { !showModal && <AddIcon ClickFn={() => { setshowModal(true) }}/>} 
