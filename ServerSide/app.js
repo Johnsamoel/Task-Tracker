@@ -32,6 +32,7 @@ app.use(cookieParser());
 
 // cors to specify which site to serve
 app.use(cors({ origin: "http://localhost:3000", credentials: true }))
+
 // parsing json data
 app.use(express.json());
 
@@ -41,18 +42,20 @@ app.use( express.static(path.join(__dirname , 'Public/Avatars')) )
 // authentications routes
 app.use('/auth',Authentication);
 
-// check if the user is Authenticated first.
-
-
+// admin routes
 app.use('/dashboard',adminDahsboard)
 
+// task routes
 app.use(TasksRoutes);
 
+// user routes
 app.use(UserRoutes);
 
+// not found route
 app.use(NotFoundRoute);
 
 
 app.use((error, req, res, next)=> {
+  console.log(error)
     res.status(error.StatusCode || 404).json({ message: error.message })
   });

@@ -1,4 +1,4 @@
-
+import Link from "next/link";
 
 export default function FooterSmall(props: { absolute: any; }) {
   return (
@@ -21,12 +21,12 @@ export default function FooterSmall(props: { absolute: any; }) {
             <div className="w-full md:w-8/12 px-4">
               <ul className="flex flex-wrap list-none md:justify-end  justify-center">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/About"
                     className="text-white hover:text-gray-400 text-sm font-semibold block py-1 px-3"
                   >
                     About Us
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

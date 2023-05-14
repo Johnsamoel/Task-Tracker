@@ -39,7 +39,7 @@ const UserSchema = mongoose.Schema({
         minlength: [4, "Password should be 4 characters"]
     },
     tasks: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: [{ type: mongoose.Schema.Types.ObjectId , ref: 'Task'}],
         required: [true , "task is Required"],
         ref: 'Task'
     },
@@ -52,7 +52,7 @@ const UserSchema = mongoose.Schema({
         enum: ["Admin", "User"]
     },
     friends: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: [{type:mongoose.Schema.Types.ObjectId , ref: 'User'}],
         required: false,
         ref: 'User'
     }

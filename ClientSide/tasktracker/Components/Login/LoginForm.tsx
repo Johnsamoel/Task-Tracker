@@ -2,13 +2,11 @@ import { loginState } from "@/models/loginModel";
 import { loginUser } from "@/store/middlewares/getUserInfoMiddleware";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Link from 'next/link'
+import Link from "next/link";
 import { loginSchema } from "@/utils/validationLoginForm";
 import { useRouter } from "next/router";
 
-
 const LoginForm = () => {
-  
   const loginIntialState: loginState = {
     email: "",
     password: "",
@@ -22,8 +20,8 @@ const LoginForm = () => {
   const [error, setError] = useState(errorObj);
 
   const dispatch = useDispatch();
-  const store:any = useSelector((state) => state);
-  const router= useRouter()
+  const store: any = useSelector((state) => state);
+  const router = useRouter();
   const handleLoginFormChange = (name: string, value: string) => {
     setLoginState((prevState) => ({
       ...prevState,
@@ -31,12 +29,11 @@ const LoginForm = () => {
     }));
   };
 
-  console.log(store, "store");
-useEffect(()=>{
-if(store.userAuthentication.Success){
-router.replace(`/Dashboard/Tasks`)
-}
-},[store.userAuthentication.Success])
+  useEffect(() => {
+    if (store.userAuthentication.Success) {
+      router.replace(`/Dashboard/Tasks`);
+    }
+  }, [store.userAuthentication.Success]);
   const handleErrorObj = (name: string, errorMessage: string) => {
     setError((prevState) => ({
       ...prevState,
@@ -45,16 +42,15 @@ router.replace(`/Dashboard/Tasks`)
     }));
   };
   const login = () => {
-    const validationResult= loginSchema.validate(state)
-if(!validationResult.error){
-  handleErrorObj("","")
-  dispatch(loginUser(state) as any);
-}else{
-  const key = validationResult.error.details[0].path[0] as string;
-  const errorMessage = validationResult.error.message;
-  handleErrorObj(key, errorMessage);
-}
-    
+    const validationResult = loginSchema.validate(state);
+    if (!validationResult.error) {
+      handleErrorObj("", "");
+      dispatch(loginUser(state) as any);
+    } else {
+      const key = validationResult.error.details[0].path[0] as string;
+      const errorMessage = validationResult.error.message;
+      handleErrorObj(key, errorMessage);
+    }
   };
   return (
     <div className="container mx-auto px-4 h-full">
@@ -86,10 +82,10 @@ if(!validationResult.error){
                     style={{ transition: "all .15s ease" }}
                   />
                   {error.name === "email" && (
-                      <span>
-                        <small>{error.errorMessage}</small>
-                      </span>
-                    )}
+                    <span>
+                      <small>{error.errorMessage}</small>
+                    </span>
+                  )}
                 </div>
 
                 <div className="relative w-full mb-3">
@@ -112,10 +108,10 @@ if(!validationResult.error){
                     style={{ transition: "all .15s ease" }}
                   />
                   {error.name === "password" && (
-                      <span>
-                        <small>{error.errorMessage}</small>
-                      </span>
-                    )}
+                    <span>
+                      <small>{error.errorMessage}</small>
+                    </span>
+                  )}
                 </div>
 
                 <div className="text-center mt-6">
@@ -127,17 +123,19 @@ if(!validationResult.error){
                   >
                     Sign In
                   </button>
-                  {(store.userAuthentication.errorMessage!==""&&!store.userAuthentication.Success)&&<span>
+                  {store.userAuthentication.errorMessage !== "" &&
+                    !store.userAuthentication.Success && (
+                      <span>
                         <small>{store.userAuthentication.errorMessage}</small>
-                      </span>}
-<Link href={'/Register'}>
-<p>Do not have an account? Sign up now!!</p>
-</Link>
+                      </span>
+                    )}
+                  <Link href={"/Register"}>
+                    <p>Do not have an account? Sign up now!!</p>
+                  </Link>
                 </div>
               </form>
             </div>
           </div>
-
         </div>
       </div>
     </div>
