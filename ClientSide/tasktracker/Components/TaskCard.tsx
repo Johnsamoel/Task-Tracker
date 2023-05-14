@@ -12,7 +12,7 @@ const TaskCard = (props:{Title:string , description:string , status:string , Tas
             <h5 className="text-blueGray-400 uppercase font-bold text-xs">
               {props.Title}
             </h5>
-            <span className="font-semibold text-xs text-blueGray-700">
+            <span className="font-semibold text-xs text-blueGray-700 ">
               {props.description}
             </span>
           </div>

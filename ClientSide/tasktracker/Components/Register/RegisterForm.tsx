@@ -64,7 +64,7 @@ const RegisterForm = () => {
       handleErrorObj(key, errorMessage);
     }
   };
-  console.log(state, "state");
+
   return (
     <div className="container mx-auto px-4  h-full">
       <form className="container mx-auto px-4 h-full">
@@ -242,7 +242,7 @@ const RegisterForm = () => {
                     type="button"
                     style={{ transition: "all .15s ease" }}
                   >
-                    Sign In
+                    Sign Up
                   </button>
                 </div>
               </div>
