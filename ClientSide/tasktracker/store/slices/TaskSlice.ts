@@ -20,8 +20,7 @@ const TaskSlice = createSlice({
 
   extraReducers: (builder) => {
     builder.addCase(GetTaskInfo.fulfilled, (state , action:PayloadAction<any> ) => {
-        console.log(state, 'state111111111111111')
-        console.log(action, '222222222222222222222')
+
     })
 
 }
@@ -29,5 +28,5 @@ const TaskSlice = createSlice({
 
 });
 
-export const authActions = TaskSlice.actions;
+export const taskActions = TaskSlice.actions;
 export default TaskSlice.reducer;

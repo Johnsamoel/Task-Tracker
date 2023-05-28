@@ -1,4 +1,5 @@
 import { newTaskSchema } from "@/utils/NewTaskValidation";
+import { getBuffer } from "@/utils/utilsFunctions";
 import axios from "axios";
 import { useState } from "react";
 interface state {
@@ -16,7 +17,7 @@ const NewTask = (props: { showModalfn: any }) => {
     title: "",
     description: "",
     status: "",
-    image: "",
+    image: null,
   };
   const errorObj: error = {
     name: "",
@@ -39,6 +40,7 @@ const NewTask = (props: { showModalfn: any }) => {
   };
   const submitTask = () => {
     const validationResult = newTaskSchema.validate(taskdata);
+    console.log(taskdata,"datat")
     if (!validationResult.error) {
       handleErrorObj("", "");
       axios
@@ -49,6 +51,7 @@ const NewTask = (props: { showModalfn: any }) => {
               title: taskdata.title,
               description: taskdata.description,
               status: taskdata.status,
+              image:taskdata.image.name
             },
           },
           { withCredentials: true }
@@ -65,6 +68,18 @@ const NewTask = (props: { showModalfn: any }) => {
       handleErrorObj(key, errorMessage);
     }
   };
+  const uploadImage=async()=>{
+let input = document.getElementById("FileInput") as HTMLInputElement
+if(!input|| !input.files) return ;
+if(input&& input.files?.length>0){
+let fileData= new Blob([input.files[0]])
+let result= new Promise(getBuffer(fileData))
+let response= await result
+console.log(input.files[0])
+console.log(response,"repo")
+handleInputChange("image",input.files[0] )
+}
+  }
   return (
     <div
       v-if="newMessageOpen"
@@ -210,22 +225,7 @@ const NewTask = (props: { showModalfn: any }) => {
               Completed
             </label>
           </div>
-          <div className="mb-[0.125rem] inline-block  min-h-[1.5rem] pl-[1.5rem]">
-            <input
-              onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-              value="Cancelled"
-              className="relative float-left checked:bg-pink-500 bg-slate-100 -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 appearance-none rounded-full border-2 border-solid border-neutral-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:border-primary checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:border-neutral-600 dark:checked:border-primary dark:checked:after:border-primary dark:checked:after:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:border-primary dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
-              type="radio"
-              name="status"
-              id="radioDefault00"
-            />
-            <label
-              className="mt-px inline-block pl-[0.15rem] hover:cursor-pointer  text-slate-100 text-xs font-bold mb-2"
-              htmlFor="radioDefault00"
-            >
-              Cancelled
-            </label>
-          </div>
+
         </div>
         {error.name === "status" && (
                       <span>
@@ -247,11 +247,14 @@ const NewTask = (props: { showModalfn: any }) => {
               <path d="M0 0h24v24H0z" fill="none" />
               <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z" />
             </svg>
-            <span className="ml-2">Upload Task Image</span>
+            {/* <span className="ml-2">Upload Task Image</span> */}
             <input
-              className="cursor-pointer absolute block opacity-0 pin-r pin-t"
+            id="FileInput"
+            onChange={uploadImage}
+            accept="image/png, image/jpeg"
+              className="cursor-pointer absolute block  pin-r pin-t"
               type="file"
-              name="vacancyImageFiles"
+              name="image"
             />
           </button>
         </div>
